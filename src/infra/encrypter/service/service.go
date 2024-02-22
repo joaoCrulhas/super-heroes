@@ -1,6 +1,6 @@
 package encrypter
 
-import custom_errors "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/error"
+import custom_errors "github.com/joaoCrulhas/omnevo-super-heroes/src/error"
 
 type Service struct{}
 

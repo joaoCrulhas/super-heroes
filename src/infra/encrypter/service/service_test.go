@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter"
+	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/service"
 	"github.com/stretchr/testify/suite"
 )
 
