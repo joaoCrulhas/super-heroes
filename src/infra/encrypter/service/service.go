@@ -50,6 +50,3 @@ func (service *Service) Encrypt(value string) (string, error) {
 	}
 	return encryptedValue, nil
 }
-
-// Ao receber uma letra eu preciso fazer o seguinte, acessar o dicionário e pegar a chave do map, ao pegar a chave do map tenho que fazer a seguitne conta
-// currentCharCode + key > 26 ? ( currentCharCode + key) % 26 : currentCharCode + key
