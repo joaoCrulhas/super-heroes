@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/joaoCrulhas/omnevo-super-heroes/src/infra/dictionary"
 	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/service"
 	"github.com/stretchr/testify/suite"
 )
@@ -17,9 +18,10 @@ const key = 5
 
 // this function executes before the test suite begins execution
 func (suite *EncrypterServiceSuite) SetupSuite() {
-	// set StartingNumber to one
 	fmt.Println(">>> From SetupSuite")
-	suite.sut = encrypter.NewEncryptService(key)
+	alphabet := "abcdefghijklmnopqrstuvwxyz"
+	dictionary := dictionary.NewDictionaryRomanAlphabetic(alphabet, dictionary.Compute(alphabet))
+	suite.sut = encrypter.NewEncryptService(key, dictionary)
 }
 
 // this function executes after all tests executed
@@ -45,6 +47,18 @@ func (suite *EncrypterServiceSuite) TestShouldReturnErrorIfInputIsEmpty() {
 func (suite *EncrypterServiceSuite) TestShouldReturnErrorIfHasInvalidCharacters() {
 	_, err := suite.sut.Encrypt("ab@#$!c123")
 	suite.Assertions.Error(err)
+}
+
+func (suite *EncrypterServiceSuite) TestShouldReturnAnEncryptStringIfTheInputIsCorrect() {
+	expected := "otft"
+	got, _ := suite.sut.Encrypt("joao")
+	suite.Assertions.Equal(got, expected)
+}
+
+func (suite *EncrypterServiceSuite) TestShouldReturnAnEncryptedStringIfTheInputExceedsTheAlphabet() {
+	expected := "bcde"
+	got, _ := suite.sut.Encrypt("wxyz")
+	suite.Assertions.Equal(got, expected)
 }
 
 func TestCalculatorTestSuite(t *testing.T) {
