@@ -13,11 +13,13 @@ type EncrypterServiceSuite struct {
 	sut encrypter.Service
 }
 
+const key = 5
+
 // this function executes before the test suite begins execution
 func (suite *EncrypterServiceSuite) SetupSuite() {
 	// set StartingNumber to one
 	fmt.Println(">>> From SetupSuite")
-	suite.sut = encrypter.NewEncryptService()
+	suite.sut = encrypter.NewEncryptService(key)
 }
 
 // this function executes after all tests executed
@@ -38,6 +40,10 @@ func (suite *EncrypterServiceSuite) TearDownTest() {
 
 func (suite *EncrypterServiceSuite) TestShouldReturnErrorIfInputIsEmpty() {
 	_, err := suite.sut.Encrypt("")
+	suite.Assertions.Error(err)
+}
+func (suite *EncrypterServiceSuite) TestShouldReturnErrorIfHasInvalidCharacters() {
+	_, err := suite.sut.Encrypt("ab@#$!c123")
 	suite.Assertions.Error(err)
 }
 
