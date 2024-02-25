@@ -12,8 +12,8 @@ type Service struct {
 	dictionary domain.Dictionary
 }
 
-func NewEncryptService(key uint32, dictionary domain.Dictionary) Service {
-	return Service{
+func NewEncryptService(key uint32, dictionary domain.Dictionary) *Service {
+	return &Service{
 		key:        key,
 		dictionary: dictionary,
 	}

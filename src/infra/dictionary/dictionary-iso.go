@@ -1,23 +1,23 @@
 package dictionary
 
-type DictionaryRomanAlphabetic struct {
+type DictionaryIsoAlphabetic struct {
 	alphabet   string
 	dictionary map[rune]int
 }
 
-func NewDictionaryRomanAlphabetic(alphabet string, dictionary map[rune]int) *DictionaryRomanAlphabetic {
-	return &DictionaryRomanAlphabetic{
+func NewDictionaryIsoAlphabetic(alphabet string, dictionary map[rune]int) *DictionaryIsoAlphabetic {
+	return &DictionaryIsoAlphabetic{
 		alphabet:   alphabet,
 		dictionary: Compute(alphabet),
 	}
 }
 
-func (d *DictionaryRomanAlphabetic) GetKey(input rune) int {
+func (d *DictionaryIsoAlphabetic) GetKey(input rune) int {
 	key := d.dictionary[input]
 	return key
 }
 
-func (d *DictionaryRomanAlphabetic) GetValue(key int) rune {
+func (d *DictionaryIsoAlphabetic) GetValue(key int) rune {
 	for k, v := range d.dictionary {
 		if v == key {
 			return k

@@ -11,7 +11,7 @@ import (
 
 type EncrypterServiceSuite struct {
 	suite.Suite
-	sut encrypter.Service
+	sut *encrypter.Service
 }
 
 const key = 5
@@ -20,7 +20,7 @@ const key = 5
 func (suite *EncrypterServiceSuite) SetupSuite() {
 	fmt.Println(">>> From SetupSuite")
 	alphabet := "abcdefghijklmnopqrstuvwxyz"
-	dictionary := dictionary.NewDictionaryRomanAlphabetic(alphabet, dictionary.Compute(alphabet))
+	dictionary := dictionary.NewDictionaryIsoAlphabetic(alphabet, dictionary.Compute(alphabet))
 	suite.sut = encrypter.NewEncryptService(key, dictionary)
 }
 
@@ -61,6 +61,6 @@ func (suite *EncrypterServiceSuite) TestShouldReturnAnEncryptedStringIfTheInputE
 	suite.Assertions.Equal(got, expected)
 }
 
-func TestCalculatorTestSuite(t *testing.T) {
+func TestEncrypterAlphabeticIso(t *testing.T) {
 	suite.Run(t, new(EncrypterServiceSuite))
 }
