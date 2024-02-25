@@ -3,14 +3,14 @@ package encrypter
 import (
 	"unicode"
 
-	custom_errors "github.com/joaoCrulhas/omnevo-super-heroes/src/error"
+	"github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
 )
 
 type EncryptValidators func(string) error
 
 func ValidateEmptyInput(value string) error {
 	if value == "" {
-		return custom_errors.EmptyString()
+		return domain.EmptyString() // Fix the function call
 	}
 	return nil
 }
@@ -18,7 +18,7 @@ func ValidateEmptyInput(value string) error {
 func ValidateSpecialCharacters(value string) error {
 	for _, r := range value {
 		if !unicode.IsLetter(r) {
-			return custom_errors.InvalidCharacters()
+			return domain.InvalidCharacters()
 		}
 	}
 	return nil
