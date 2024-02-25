@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/joaoCrulhas/omnevo-super-heroes/src/infra/dictionary"
-	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/service"
+	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy"
+	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy/validators"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -21,7 +22,7 @@ func (suite *EncrypterServiceSuite) SetupSuite() {
 	fmt.Println(">>> From SetupSuite")
 	alphabet := "abcdefghijklmnopqrstuvwxyz"
 	dictionary := dictionary.NewDictionaryIsoAlphabetic(alphabet, dictionary.Compute(alphabet))
-	suite.sut = encrypter.NewEncryptService(key, dictionary)
+	suite.sut = encrypter.NewEncryptService(key, dictionary, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
 }
 
 // this function executes after all tests executed
