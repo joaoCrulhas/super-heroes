@@ -12,6 +12,10 @@ func NewDictionaryIsoAlphabetic(alphabet string, dictionary map[rune]int) *Dicti
 	}
 }
 
+func (d *DictionaryIsoAlphabetic) GetAlphabetLength() int {
+	return len(d.alphabet)
+}
+
 func (d *DictionaryIsoAlphabetic) GetKey(input rune) int {
 	key := d.dictionary[input]
 	return key

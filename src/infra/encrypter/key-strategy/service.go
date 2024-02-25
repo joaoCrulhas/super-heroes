@@ -1,19 +1,17 @@
 package encrypter
 
 import (
-	"unicode"
-
 	"github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
 	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy/validators"
 )
 
 type Service struct {
-	key        uint32
+	key        int
 	dictionary domain.Dictionary
 	validators []validators.EncryptValidators
 }
 
-func NewEncryptService(key uint32, dictionary domain.Dictionary, fnValidators ...validators.EncryptValidators) *Service {
+func NewEncryptService(key int, dictionary domain.Dictionary, fnValidators ...validators.EncryptValidators) *Service {
 	return &Service{
 		key:        key,
 		dictionary: dictionary,
@@ -21,32 +19,24 @@ func NewEncryptService(key uint32, dictionary domain.Dictionary, fnValidators ..
 	}
 }
 
-func (service *Service) hasInvalidChars(value string) bool {
-	for _, r := range value {
-		if !unicode.IsLetter(r) {
-			return false
-		}
-	}
-	return true
-}
-
-func (service *Service) Encrypt(value string) (string, error) {
+func (service *Service) Encrypt(input string) (string, error) {
 	var encryptedValue string
 	for _, fn := range service.validators {
-		if err := fn(value); err != nil {
+		if err := fn(input); err != nil {
 			return "", err
 		}
 	}
-	for _, letter := range value {
+	alphabetLength := service.dictionary.GetAlphabetLength()
+	var t rune
+	for _, letter := range input {
 		key := service.dictionary.GetKey(letter)
-		var t rune
-		if uint32(key)+service.key > 26 {
-			var value = (uint32(key) + service.key) % 26
-			t = service.dictionary.GetValue(int(value))
+		var value int
+		if (key)+service.key > alphabetLength {
+			value = ((key) + service.key) % alphabetLength
 		} else {
-			var value = uint32(key) + service.key
-			t = service.dictionary.GetValue(int(value))
+			value = (key) + service.key
 		}
+		t = service.dictionary.GetValue(value)
 		encryptedValue += string(t)
 	}
 	return encryptedValue, nil
