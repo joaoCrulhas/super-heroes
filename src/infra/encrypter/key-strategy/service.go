@@ -28,9 +28,9 @@ func (service *Service) Encrypt(input string) (string, error) {
 	}
 	alphabetLength := service.dictionary.GetAlphabetLength()
 	var t rune
+	var value int
 	for _, letter := range input {
 		key := service.dictionary.GetKey(letter)
-		var value int
 		if (key)+service.key > alphabetLength {
 			value = ((key) + service.key) % alphabetLength
 		} else {
