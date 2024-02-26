@@ -20,15 +20,15 @@ func NewEncryptService(key int, dictionary domain.Dictionary, fnValidators ...va
 }
 
 func (service *Service) Encrypt(input string) (string, error) {
-	var encryptedValue string
-	for _, fn := range service.validators {
-		if err := fn(input); err != nil {
-			return "", err
-		}
+	err := service.execValidators(input)
+	if err != nil {
+		return "", err
 	}
-	alphabetLength := service.dictionary.GetAlphabetLength()
+
+	var encryptedValue string
 	var t rune
 	var value int
+	alphabetLength := service.dictionary.GetAlphabetLength()
 	for _, letter := range input {
 		key := service.dictionary.GetKey(letter)
 		if (key)+service.key > alphabetLength {
@@ -40,4 +40,13 @@ func (service *Service) Encrypt(input string) (string, error) {
 		encryptedValue += string(t)
 	}
 	return encryptedValue, nil
+}
+
+func (service *Service) execValidators(input string) error {
+	for _, fn := range service.validators {
+		if err := fn(input); err != nil {
+			return err
+		}
+	}
+	return nil
 }
