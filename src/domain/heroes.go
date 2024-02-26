@@ -1,5 +1,7 @@
 package domain
 
+import "context"
+
 type (
 	Superhero struct {
 		Name        string   `json:"name"`
@@ -10,5 +12,10 @@ type (
 	Identity struct {
 		FirstName string `json:"firstName"`
 		LastName  string `json:"lastName"`
+	}
+
+	SuperHeroRepository interface {
+		Fetch(c context.Context) ([]Superhero, error)
+		GetBySuperPower(c context.Context, powers []string) ([]Superhero, error)
 	}
 )
