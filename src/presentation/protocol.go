@@ -7,7 +7,7 @@ import (
 type (
 	Response[T any] struct {
 		StatusCode int `json:"statusCode"`
-		Body       T   `json:"body"`
+		Data       T   `json:"data"`
 	}
 	Request[T any] struct {
 		Body T `json:"body"`

@@ -18,15 +18,15 @@ func NewFetchController(superHerUseCase domain.SuperHeroUseCase) *FetchSuperHero
 }
 
 func (controller *FetchSuperHeroController) Handle(ctx context.Context, request presentation.Request[any]) presentation.Response[[]domain.Superhero] {
-	body, err := controller.superHerUseCase.Fetch(ctx)
+	data, err := controller.superHerUseCase.Fetch(ctx)
 	if err != nil {
 		return presentation.Response[[]domain.Superhero]{
 			StatusCode: 500,
-			Body:       nil,
+			Data:       nil,
 		}
 	}
 	return presentation.Response[[]domain.Superhero]{
 		StatusCode: 200,
-		Body:       body,
+		Data:       data,
 	}
 }

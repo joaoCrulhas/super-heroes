@@ -18,15 +18,15 @@ func NewFilterController(superHerUseCase domain.SuperHeroUseCase) *FilterSuperHe
 }
 
 func (controller *FilterSuperHeroController) Handle(ctx context.Context, request presentation.Request[map[string]any]) presentation.Response[[]domain.Superhero] {
-	body, err := controller.superHerUseCase.GetBySuperPower(ctx, request.Body)
+	data, err := controller.superHerUseCase.GetBySuperPower(ctx, request.Body)
 	if err != nil {
 		return presentation.Response[[]domain.Superhero]{
 			StatusCode: 500,
-			Body:       nil,
+			Data:       nil,
 		}
 	}
 	return presentation.Response[[]domain.Superhero]{
 		StatusCode: 200,
-		Body:       body,
+		Data:       data,
 	}
 }

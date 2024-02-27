@@ -47,7 +47,7 @@ func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 	suite.mockedUseCase.EXPECT().Fetch(suite.ctx).Return(expected, nil).Once()
 	request := presentation.Request[any]{}
 	actual := suite.sut.Handle(suite.ctx, request)
-	suite.Equal(expected, actual.Body)
+	suite.Equal(expected, actual.Data)
 	suite.Equal(200, actual.StatusCode)
 }
 
