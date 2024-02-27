@@ -1,48 +1,49 @@
 package encrypter
 
 import (
-	"github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
+	"strings"
+
 	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy/validators"
 )
 
-type Service struct {
-	key        int
-	dictionary domain.Dictionary
-	validators []validators.EncryptValidators
+const (
+	MinShiftValue = 96
+	MaxShiftValue = 122
+)
+
+type EncryptDeeSeeChiffreService struct {
+	key           rune
+	validators    []validators.EncryptValidators
+	maxShiftValue rune
+	minShiftValue rune
 }
 
-func NewEncryptService(key int, dictionary domain.Dictionary, fnValidators ...validators.EncryptValidators) *Service {
-	return &Service{
-		key:        key,
-		dictionary: dictionary,
-		validators: fnValidators,
+func NewEncryptDeeSeeChiffreService(key rune, fnValidators ...validators.EncryptValidators) *EncryptDeeSeeChiffreService {
+	return &EncryptDeeSeeChiffreService{
+		key:           key,
+		validators:    fnValidators,
+		maxShiftValue: MaxShiftValue,
+		minShiftValue: MinShiftValue,
 	}
 }
 
-func (service *Service) Encrypt(input string) (string, error) {
+func (service *EncryptDeeSeeChiffreService) Encrypt(input string) (string, error) {
 	err := service.execValidators(input)
 	if err != nil {
 		return "", err
 	}
-
-	var encryptedValue string
-	var t rune
-	var value int
-	alphabetLength := service.dictionary.GetAlphabetLength()
+	var builder strings.Builder
 	for _, letter := range input {
-		key := service.dictionary.GetKey(letter)
-		if (key)+service.key > alphabetLength {
-			value = ((key) + service.key) % alphabetLength
-		} else {
-			value = (key) + service.key
+		key := letter + service.key
+		if key > service.maxShiftValue {
+			key = key%service.maxShiftValue + service.minShiftValue
 		}
-		t = service.dictionary.GetValue(value)
-		encryptedValue += string(t)
+		builder.WriteRune(rune(key))
 	}
-	return encryptedValue, nil
+	return strings.ToLower(builder.String()), nil
 }
 
-func (service *Service) execValidators(input string) error {
+func (service *EncryptDeeSeeChiffreService) execValidators(input string) error {
 	for _, fn := range service.validators {
 		if err := fn(input); err != nil {
 			return err
