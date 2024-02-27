@@ -7,6 +7,7 @@ import (
 
 	"github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
 	db "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/db/memory"
+	testutils "github.com/joaoCrulhas/omnevo-super-heroes/src/test-utils"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -19,7 +20,7 @@ type MemoryDbTestSuite struct {
 // this function executes before the test suite begins execution
 func (suite *MemoryDbTestSuite) SetupSuite() {
 	fmt.Println(">>> From SetupSuite")
-	suite.sut = db.NewSuperHeroMemoryRepository(getSuperHeroes())
+	suite.sut = db.NewSuperHeroMemoryRepository(testutils.GetSuperHeroes())
 	suite.ctx = context.Background()
 }
 
@@ -40,7 +41,7 @@ func (suite *MemoryDbTestSuite) TearDownTest() {
 
 func (suite *MemoryDbTestSuite) TestShouldReturnAllHeroes() {
 	fmt.Println("From TestExample")
-	expected := getSuperHeroes()
+	expected := testutils.GetSuperHeroes()
 	got, _ := suite.sut.Fetch(suite.ctx)
 	suite.Equal(expected, got)
 }
@@ -48,7 +49,7 @@ func (suite *MemoryDbTestSuite) TestShouldReturnAllHeroes() {
 func (suite *MemoryDbTestSuite) TestUsingFindByFilter() {
 	filter := map[string]any{"superpowers": "flight"}
 	fmt.Println("From TestExample")
-	expected := getSuperHeroes()[0:1]
+	expected := testutils.GetSuperHeroes()[0:1]
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
 	suite.Equal(expected, got)
 }
@@ -62,28 +63,4 @@ func (suite *MemoryDbTestSuite) TestShouldReturnAnEmptyArrayIfNoSuperHeroWithSup
 
 func TestMemoryDbTestSuite(t *testing.T) {
 	suite.Run(t, new(MemoryDbTestSuite))
-}
-
-func getSuperHeroes() []domain.Superhero {
-	heroes := []domain.Superhero{ // Change from array to slice
-		{
-			Name: "superHero1",
-			Identity: domain.Identity{
-				FirstName: "Snyder",
-				LastName:  "Johnston",
-			},
-			Birthday:    "1990-04-14",
-			Superpowers: []string{"flight", "strength", "invulnerability"},
-		},
-		{
-			Name: "Super Hero 2",
-			Identity: domain.Identity{
-				FirstName: "Petra",
-				LastName:  "Sharpe",
-			},
-			Birthday:    "1973-04-18", // Batman's first appearance in comics
-			Superpowers: []string{},
-		},
-	}
-	return heroes
 }

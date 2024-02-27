@@ -1,0 +1,6 @@
+with-expecter: true
+packages:
+  github.com/joaoCrulhas/omnevo-super-heroes/src/domain:
+    config:
+    interfaces:
+      Repository:
