@@ -17,7 +17,7 @@ type (
 	}
 	// This is the usecases for the SuperHero Domain
 	SuperHeroUseCase interface {
-		Fetch(c context.Context) ([]Superhero, error)
-		GetBySuperPower(c context.Context, powers map[string]any) ([]Superhero, error)
+		Fetch(ctx context.Context) ([]Superhero, error)
+		GetBySuperPower(ctx context.Context, powers map[string]any) ([]Superhero, error)
 	}
 )
