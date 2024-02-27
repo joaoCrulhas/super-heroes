@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/joaoCrulhas/omnevo-super-heroes/src/infra/dictionary"
-	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy"
-	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy/validators"
+	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/deesee-chiffre"
+	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/deesee-chiffre/validators"
 	"github.com/stretchr/testify/suite"
 )
 
 type EncrypterServiceSuite struct {
 	suite.Suite
-	sut *encrypter.Service
+	sut *encrypter.EncryptDeeSeeChiffreService
 }
 
 const key = 5
@@ -20,9 +19,7 @@ const key = 5
 // this function executes before the test suite begins execution
 func (suite *EncrypterServiceSuite) SetupSuite() {
 	fmt.Println(">>> From SetupSuite")
-	alphabet := "abcdefghijklmnopqrstuvwxyz"
-	dictionary := dictionary.NewDictionaryIsoAlphabetic(alphabet, dictionary.Compute(alphabet))
-	suite.sut = encrypter.NewEncryptService(key, dictionary, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
+	suite.sut = encrypter.NewEncryptDeeSeeChiffreService(key, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
 }
 
 // this function executes after all tests executed
@@ -57,9 +54,21 @@ func (suite *EncrypterServiceSuite) TestShouldReturnAnEncryptStringIfTheInputIsC
 }
 
 func (suite *EncrypterServiceSuite) TestShouldReturnAnEncryptedStringIfTheInputExceedsTheAlphabet() {
-	expected := "bcde"
-	got, _ := suite.sut.Encrypt("wxyz")
-	suite.Assertions.Equal(got, expected)
+	expected := "hqfwp"
+	actual, _ := suite.sut.Encrypt("clark")
+	suite.Assertions.Equal(expected, actual)
+}
+
+func TestShouldReturnACorrectValueWithKeyEqualsThree(t *testing.T) {
+	sut := encrypter.NewEncryptDeeSeeChiffreService(3, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
+	actual1, _ := sut.Encrypt("cherry")
+	if actual1 != "fkhuub" {
+		t.Fatalf(`want %q, got %v error`, "b", actual1)
+	}
+	actual2, _ := sut.Encrypt("blossom")
+	if actual2 != "eorvvrp" {
+		t.Fatalf(`Hello("") = %q, %v, want "", error`, "eoorvrf", actual2)
+	}
 }
 
 func TestEncrypterAlphabeticIso(t *testing.T) {
