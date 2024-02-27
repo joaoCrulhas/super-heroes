@@ -3,7 +3,7 @@ package encrypter
 import (
 	"strings"
 
-	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy/validators"
+	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/deesee-chiffre/validators"
 )
 
 const (

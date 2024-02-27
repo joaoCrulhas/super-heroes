@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy"
-	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/key-strategy/validators"
+	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/deesee-chiffre"
+	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/deesee-chiffre/validators"
 	"github.com/stretchr/testify/suite"
 )
 
