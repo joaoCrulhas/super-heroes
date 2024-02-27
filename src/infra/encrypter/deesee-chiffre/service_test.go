@@ -14,12 +14,16 @@ type EncrypterServiceSuite struct {
 	sut *encrypter.EncryptDeeSeeChiffreService
 }
 
-const key = 5
+const (
+	MinShiftValue = 96
+	MaxShiftValue = 122
+	key           = 5
+)
 
 // this function executes before the test suite begins execution
 func (suite *EncrypterServiceSuite) SetupSuite() {
 	fmt.Println(">>> From SetupSuite")
-	suite.sut = encrypter.NewEncryptDeeSeeChiffreService(key, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
+	suite.sut = encrypter.NewEncryptDeeSeeChiffreService(key, MinShiftValue, MaxShiftValue, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
 }
 
 // this function executes after all tests executed
@@ -60,7 +64,7 @@ func (suite *EncrypterServiceSuite) TestShouldReturnAnEncryptedStringIfTheInputE
 }
 
 func TestShouldReturnACorrectValueWithKeyEqualsThree(t *testing.T) {
-	sut := encrypter.NewEncryptDeeSeeChiffreService(3, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
+	sut := encrypter.NewEncryptDeeSeeChiffreService(3, MinShiftValue, MaxShiftValue, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
 	actual1, _ := sut.Encrypt("cherry")
 	if actual1 != "fkhuub" {
 		t.Fatalf(`want %q, got %v error`, "b", actual1)

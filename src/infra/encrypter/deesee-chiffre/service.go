@@ -6,10 +6,7 @@ import (
 	validators "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/deesee-chiffre/validators"
 )
 
-const (
-	MinShiftValue = 96
-	MaxShiftValue = 122
-)
+
 
 type EncryptDeeSeeChiffreService struct {
 	key           rune
@@ -18,12 +15,12 @@ type EncryptDeeSeeChiffreService struct {
 	minShiftValue rune
 }
 
-func NewEncryptDeeSeeChiffreService(key rune, fnValidators ...validators.EncryptValidators) *EncryptDeeSeeChiffreService {
+func NewEncryptDeeSeeChiffreService(key rune, minShiftValue rune, maxShiftValue rune, fnValidators ...validators.EncryptValidators) *EncryptDeeSeeChiffreService {
 	return &EncryptDeeSeeChiffreService{
 		key:           key,
 		validators:    fnValidators,
-		maxShiftValue: MaxShiftValue,
-		minShiftValue: MinShiftValue,
+		maxShiftValue: maxShiftValue,
+		minShiftValue: minShiftValue,
 	}
 }
 
