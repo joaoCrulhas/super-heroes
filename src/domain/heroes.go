@@ -2,6 +2,8 @@ package domain
 
 import "context"
 
+var SuperPowers = []string{"strength", "speed", "flight", "invulnerability", "healing"}
+
 type (
 	Superhero struct {
 		Name        string   `json:"name"`
@@ -13,9 +15,9 @@ type (
 		FirstName string `json:"firstName"`
 		LastName  string `json:"lastName"`
 	}
-
-	SuperHeroRepository interface {
+	// This is the usecases for the SuperHero Domain
+	SuperHeroUseCase interface {
 		Fetch(c context.Context) ([]Superhero, error)
-		GetBySuperPower(c context.Context, powers []string) ([]Superhero, error)
+		GetBySuperPower(c context.Context, powers map[string]any) ([]Superhero, error)
 	}
 )
