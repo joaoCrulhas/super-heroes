@@ -14,6 +14,7 @@ type (
 		Body    T `json:"body"`
 		Headers map[string][]string
 		Params  map[string]string
+		Query   map[string][]string
 	}
 	Controller[Req any, Res any] interface {
 		Handle(ctx context.Context, request Request[Req]) Response[Res]

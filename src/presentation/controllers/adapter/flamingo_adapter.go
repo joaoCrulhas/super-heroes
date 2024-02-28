@@ -8,7 +8,6 @@ import (
 )
 
 func AdapterRequest[T any](r *web.Request) (presentation.Request[T], error) {
-	headers := r.Request().Header
 	var body T
 	if r.Request().Method == "POST" || r.Request().Method == "PUT" {
 		err := json.NewDecoder(r.Request().Body).Decode(&body)
@@ -16,10 +15,13 @@ func AdapterRequest[T any](r *web.Request) (presentation.Request[T], error) {
 			return presentation.Request[T]{}, err
 		}
 	}
+	headers := r.Request().Header
+	query := r.Request().URL.Query()
 	request := presentation.Request[T]{
 		Headers: headers,
 		Body:    body,
 		Params:  r.Params,
+		Query:   query,
 	}
 	return request, nil
 }
