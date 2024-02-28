@@ -7,8 +7,17 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func NewSuperHeroMemoryRepository(superHeroes []domain.Superhero) SuperHeroMemoryRepository {
-	return SuperHeroMemoryRepository{
+// If provided with a nil slice, it will read the file from the path provided
+func NewSuperHeroMemoryRepository(superHeroes []domain.Superhero) *SuperHeroMemoryRepository {
+	if len(superHeroes) == 0 {
+		var err error
+		superHeroes, err = ReadSuperHeroFile("superheroes.json")
+		if err != nil {
+			// Create zap logger
+			panic(err)
+		}
+	}
+	return &SuperHeroMemoryRepository{
 		superHeroes: superHeroes,
 	}
 }
@@ -27,13 +36,7 @@ func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[s
 		for k, v := range filter {
 			if k == "superpowers" {
 				cast, ok := v.(string)
-				if !ok {
-					continue
-				}
-				if hero.Superpowers == nil || len(hero.Superpowers) == 0 {
-					continue
-				}
-				if slices.Contains(hero.Superpowers, cast) {
+				if ok && slices.Contains(hero.Superpowers, cast) {
 					heroes = append(heroes, hero)
 				}
 

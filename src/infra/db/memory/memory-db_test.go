@@ -13,7 +13,7 @@ import (
 
 type MemoryDbTestSuite struct {
 	suite.Suite
-	sut db.SuperHeroMemoryRepository
+	sut *db.SuperHeroMemoryRepository
 	ctx context.Context
 }
 
