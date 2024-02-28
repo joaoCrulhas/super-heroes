@@ -15,6 +15,10 @@ func NewSuperHeroUseCase(repository db.Repository[domain.Superhero]) *superHeroU
 	return &superHeroUseCase{repository: repository}
 }
 
+func (su *superHeroUseCase) Inject(repository db.Repository[domain.Superhero]) {
+	su.repository = repository
+}
+
 func (su *superHeroUseCase) Fetch(ctx context.Context) ([]domain.Superhero, error) {
 	return su.repository.Fetch(ctx)
 }

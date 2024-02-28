@@ -6,11 +6,14 @@ import (
 
 type (
 	Response[T any] struct {
-		StatusCode int `json:"statusCode"`
-		Data       T   `json:"data"`
+		StatusCode uint  `json:"statusCode"`
+		Data       T     `json:"data"`
+		Error      error `json:"error"`
 	}
 	Request[T any] struct {
-		Body T `json:"body"`
+		Body    T `json:"body"`
+		Headers map[string][]string
+		Params  map[string]string
 	}
 	Controller[Req any, Res any] interface {
 		Handle(ctx context.Context, request Request[Req]) Response[Res]

@@ -9,3 +9,7 @@ func EmptyString() error {
 func InvalidCharacters() error {
 	return errors.New("invalid characters are not allowed")
 }
+
+func BadRequest() error {
+	return errors.New("bad request")
+}
