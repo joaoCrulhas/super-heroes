@@ -21,8 +21,11 @@ func (su *superHeroUseCase) Inject(repository db.Repository[domain.Superhero], e
 	su.encrypter = encrypter
 }
 
-func (su *superHeroUseCase) Fetch(ctx context.Context) ([]domain.Superhero, error) {
-	return su.repository.Fetch(ctx)
+func (su *superHeroUseCase) Fetch(ctx context.Context, filter map[string][]string) ([]domain.Superhero, error) {
+	if filter == nil {
+		return su.repository.Fetch(ctx)
+	}
+	return su.repository.FindByFilter(ctx, filter)
 }
 
 func (su *superHeroUseCase) GetBySuperPower(ctx context.Context, powers []string) ([]domain.Superhero, error) {

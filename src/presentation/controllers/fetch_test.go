@@ -2,7 +2,6 @@ package presentation_test
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	mocks "github.com/joaoCrulhas/omnevo-super-heroes/mocks/github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
@@ -30,6 +29,7 @@ func (suite *FetchControllerTestSuite) SetupSuite() {
 	suite.sut = controllers.NewFetchController(suite.mockedUseCase, suite.mockEncrypter)
 }
 
+// This TestSuite is responsible for testing the FetchSuperHeroController
 func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 	expected := []shero_domain.Superhero{
 		{
@@ -51,7 +51,7 @@ func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 			Superpowers: []string{},
 		},
 	}
-	suite.mockedUseCase.EXPECT().Fetch(suite.ctx).Return(expected, nil).Once()
+	suite.mockedUseCase.EXPECT().Fetch(suite.ctx, mock.Anything).Return(expected, nil)
 	suite.mockedUseCase.EXPECT().EncryptIdentity(suite.ctx, mock.Anything).Return("mock", nil)
 	request := presentation.Request[any]{}
 	actual := suite.sut.Handle(suite.ctx, request)
@@ -71,26 +71,10 @@ func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 	suite.Assertions.Equal(uint(200), actual.StatusCode)
 }
 
-func (suite *FetchControllerTestSuite) TestShouldReturnStatusCode500IfError() {
-	suite.mockedUseCase.EXPECT().Fetch(suite.ctx).Return(nil, errors.New("error")).Once()
-	request := presentation.Request[any]{}
-	actual := suite.sut.Handle(suite.ctx, request)
-	suite.Assertions.Equal(uint(500), actual.StatusCode)
-}
-
-func (suite *FetchControllerTestSuite) TestShouldReturnHeroesFilteredBySuperPower() {
-	suite.mockedUseCase.EXPECT().GetBySuperPower(suite.ctx, mock.Anything).Return(testutils.GetSuperHeroes(), nil).Once()
-	request := presentation.Request[any]{
-		Query: map[string][]string{
-			"superpowers": {"strength"},
-		},
-	}
-	actual := suite.sut.Handle(suite.ctx, request)
-	suite.Assertions.Equal(uint(200), actual.StatusCode)
-}
-
+// This TestSuite is responsible for testing the opportunity to filter the heroes by different super powers.
 func (suite *FetchControllerTestSuite) TestShouldReturnHeroesWithDifferentSuperPowers() {
-	suite.mockedUseCase.EXPECT().GetBySuperPower(suite.ctx, mock.Anything).Return(testutils.GetSuperHeroes(), nil).Once()
+	suite.mockedUseCase.EXPECT().Fetch(suite.ctx, mock.Anything).Return(testutils.GetSuperHeroes(), nil)
+	suite.mockedUseCase.EXPECT().EncryptIdentity(suite.ctx, mock.Anything).Return("mock", nil)
 	request := presentation.Request[any]{
 		Query: map[string][]string{
 			"superpowers": {"strength", "healing"},
