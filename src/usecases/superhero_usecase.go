@@ -9,20 +9,35 @@ import (
 
 type superHeroUseCase struct {
 	repository db.Repository[domain.Superhero]
+	encrypter  domain.Encrypter
 }
 
-func NewSuperHeroUseCase(repository db.Repository[domain.Superhero]) *superHeroUseCase {
-	return &superHeroUseCase{repository: repository}
+func NewSuperHeroUseCase(repository db.Repository[domain.Superhero], encrypter domain.Encrypter) *superHeroUseCase {
+	return &superHeroUseCase{repository: repository, encrypter: encrypter}
 }
 
-func (su *superHeroUseCase) Inject(repository db.Repository[domain.Superhero]) {
+func (su *superHeroUseCase) Inject(repository db.Repository[domain.Superhero], encrypter domain.Encrypter) {
 	su.repository = repository
+	su.encrypter = encrypter
 }
 
 func (su *superHeroUseCase) Fetch(ctx context.Context) ([]domain.Superhero, error) {
 	return su.repository.Fetch(ctx)
 }
 
-func (su *superHeroUseCase) GetBySuperPower(ctx context.Context, powers map[string]any) ([]domain.Superhero, error) {
-	return su.repository.FindByFilter(ctx, powers)
+func (su *superHeroUseCase) GetBySuperPower(ctx context.Context, powers []string) ([]domain.Superhero, error) {
+	return su.repository.FindByFilter(ctx, map[string][]string{"superpowers": powers})
+}
+
+func (su *superHeroUseCase) EncryptIdentity(ctx context.Context, identity domain.Identity) (string, error) {
+	firstName, err := su.encrypter.Encrypt(identity.FirstName)
+	if err != nil {
+		return "", err
+	}
+	lastName, err := su.encrypter.Encrypt(identity.LastName)
+	if err != nil {
+		return "", err
+	}
+
+	return firstName + " " + lastName, nil
 }
