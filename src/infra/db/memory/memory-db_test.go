@@ -20,7 +20,11 @@ type MemoryDbTestSuite struct {
 // this function executes before the test suite begins execution
 func (suite *MemoryDbTestSuite) SetupSuite() {
 	fmt.Println(">>> From SetupSuite")
-	suite.sut = db.NewSuperHeroMemoryRepository(testutils.GetSuperHeroes())
+	sut, err := db.NewSuperHeroMemoryRepository(testutils.GetSuperHeroes())
+	if err != nil {
+		suite.T().Errorf("Error creating SuperHeroMemoryRepository: %v", err)
+	}
+	suite.sut = sut
 	suite.ctx = context.Background()
 }
 
@@ -47,15 +51,42 @@ func (suite *MemoryDbTestSuite) TestShouldReturnAllHeroes() {
 }
 
 func (suite *MemoryDbTestSuite) TestUsingFindByFilter() {
-	filter := map[string]any{"superpowers": "flight"}
+	filter := map[string][]string{"superpowers": {"strength"}}
 	fmt.Println("From TestExample")
 	expected := testutils.GetSuperHeroes()[0:1]
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
 	suite.Equal(expected, got)
 }
 
+func (suite *MemoryDbTestSuite) TestShouldMatchTwoSuperPowers() {
+	filter := map[string][]string{"superpowers": {"strength", "healing"}}
+	fmt.Println("From TestExample")
+	expected := []domain.Superhero{
+		{
+			Name: "superHero1",
+			Identity: domain.Identity{
+				FirstName: "Snyder",
+				LastName:  "Johnston",
+			},
+			Birthday:    "1990-04-14",
+			Superpowers: []string{"flight", "strength", "invulnerability"},
+		},
+		{
+			Name: "Super Hero 3",
+			Identity: domain.Identity{
+				FirstName: "Petra",
+				LastName:  "Sharpe",
+			},
+			Birthday:    "1998-04-18", // Batman's first appearance in comics
+			Superpowers: []string{"healing"},
+		},
+	}
+	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
+	suite.Equal(expected, got)
+}
+
 func (suite *MemoryDbTestSuite) TestShouldReturnAnEmptyArrayIfNoSuperHeroWithSuperPower() {
-	filter := map[string]any{"superpowers": "random_superpower"}
+	filter := map[string][]string{"superpowers": {"invisibility"}}
 	fmt.Println("From TestExample")
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
 	suite.Equal([]domain.Superhero(nil), got)
