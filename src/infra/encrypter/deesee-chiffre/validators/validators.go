@@ -18,7 +18,7 @@ func ValidateEmptyInput(value string) error {
 func ValidateSpecialCharacters(value string) error {
 	for _, r := range value {
 		if !unicode.IsLetter(r) {
-			return domain.InvalidCharacters()
+			return domain.BadRequest("invalid characters are not allowed")
 		}
 	}
 	return nil

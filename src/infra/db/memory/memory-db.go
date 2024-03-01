@@ -8,18 +8,17 @@ import (
 )
 
 // If provided with a nil slice, it will read the file from the path provided
-func NewSuperHeroMemoryRepository(superHeroes []domain.Superhero) *SuperHeroMemoryRepository {
+func NewSuperHeroMemoryRepository(superHeroes []domain.Superhero) (*SuperHeroMemoryRepository, error) {
 	if len(superHeroes) == 0 {
 		var err error
 		superHeroes, err = ReadSuperHeroFile("superheroes.json")
 		if err != nil {
-			// Create zap logger
-			panic(err)
+			return nil, err
 		}
 	}
 	return &SuperHeroMemoryRepository{
 		superHeroes: superHeroes,
-	}
+	}, nil
 }
 
 type SuperHeroMemoryRepository struct {
@@ -30,16 +29,16 @@ func (r *SuperHeroMemoryRepository) Fetch(c context.Context) ([]domain.Superhero
 	return r.superHeroes, nil
 }
 
-func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[string]any) ([]domain.Superhero, error) {
+func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[string][]string) ([]domain.Superhero, error) {
 	var heroes []domain.Superhero
 	for _, hero := range r.superHeroes {
 		for k, v := range filter {
 			if k == "superpowers" {
-				cast, ok := v.(string)
-				if ok && slices.Contains(hero.Superpowers, cast) {
-					heroes = append(heroes, hero)
+				for _, s := range v {
+					if slices.Contains(hero.Superpowers, s) {
+						heroes = append(heroes, hero)
+					}
 				}
-
 			}
 		}
 	}

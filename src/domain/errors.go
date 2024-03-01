@@ -6,10 +6,6 @@ func EmptyString() error {
 	return errors.New("empty string is not allowed")
 }
 
-func InvalidCharacters() error {
-	return errors.New("invalid characters are not allowed")
-}
-
-func BadRequest() error {
-	return errors.New("bad request")
+func BadRequest(msg string) error {
+	return errors.New(msg)
 }

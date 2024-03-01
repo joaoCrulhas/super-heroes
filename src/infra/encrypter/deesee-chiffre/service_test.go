@@ -1,7 +1,6 @@
 package encrypter_test
 
 import (
-	"fmt"
 	"testing"
 
 	encrypter "github.com/joaoCrulhas/omnevo-super-heroes/src/infra/encrypter/deesee-chiffre"
@@ -22,24 +21,19 @@ const (
 
 // this function executes before the test suite begins execution
 func (suite *EncrypterServiceSuite) SetupSuite() {
-	fmt.Println(">>> From SetupSuite")
 	suite.sut = encrypter.NewEncryptDeeSeeChiffreService(key, MinShiftValue, MaxShiftValue, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
 }
 
 // this function executes after all tests executed
 func (suite *EncrypterServiceSuite) TearDownSuite() {
-	fmt.Println(">>> From TearDownSuite")
 }
 
 // this function executes before each test case
 func (suite *EncrypterServiceSuite) SetupTest() {
-	// reset StartingNumber to one
-	fmt.Println("-- From SetupTest")
 }
 
 // this function executes after each test case
 func (suite *EncrypterServiceSuite) TearDownTest() {
-	fmt.Println("-- From TearDownTest")
 }
 
 func (suite *EncrypterServiceSuite) TestShouldReturnErrorIfInputIsEmpty() {
@@ -72,6 +66,14 @@ func TestShouldReturnACorrectValueWithKeyEqualsThree(t *testing.T) {
 	actual2, _ := sut.Encrypt("blossom")
 	if actual2 != "eorvvrp" {
 		t.Fatalf(`Hello("") = %q, %v, want "", error`, "eoorvrf", actual2)
+	}
+}
+
+func TestShouldReturnACorrectValueWithKeyEqualsTwentySix(t *testing.T) {
+	sut := encrypter.NewEncryptDeeSeeChiffreService(26, MinShiftValue, MaxShiftValue, validators.ValidateEmptyInput, validators.ValidateSpecialCharacters)
+	actual1, _ := sut.Encrypt("zyxwvutsrqponmlkjihgfedcba")
+	if actual1 != "zyxwvutsrqponmlkjihgfedcba" {
+		t.Fatalf(`want %q, got %v error`, "zyxwvutsrqponmlkjihgfedcba", actual1)
 	}
 }
 

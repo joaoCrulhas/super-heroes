@@ -1,7 +1,7 @@
 package domain
 
 type (
-	Encrypt interface {
+	Encrypter interface {
 		Encrypt(input string) (string, error)
 	}
 )

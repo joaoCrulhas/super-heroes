@@ -22,6 +22,15 @@ func GetSuperHeroes() []domain.Superhero {
 			Birthday:    "1973-04-18", // Batman's first appearance in comics
 			Superpowers: []string{},
 		},
+		{
+			Name: "Super Hero 3",
+			Identity: domain.Identity{
+				FirstName: "Petra",
+				LastName:  "Sharpe",
+			},
+			Birthday:    "1998-04-18", // Batman's first appearance in comics
+			Superpowers: []string{"healing"},
+		},
 	}
 	return heroes
 }
