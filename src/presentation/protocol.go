@@ -20,3 +20,15 @@ type (
 		Handle(ctx context.Context, request Request[Req]) Response[Res]
 	}
 )
+
+func CreateResponse[T any](statusCode uint, data T, err error) Response[T] {
+	return Response[T]{
+		StatusCode: statusCode,
+		Data:       data,
+		Error:      err,
+	}
+}
+
+const (
+	SuperPowerFilter = "superpowers"
+)
