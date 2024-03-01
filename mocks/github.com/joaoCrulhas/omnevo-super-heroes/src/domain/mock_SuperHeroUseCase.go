@@ -22,6 +22,63 @@ func (_m *MockSuperHeroUseCase) EXPECT() *MockSuperHeroUseCase_Expecter {
 	return &MockSuperHeroUseCase_Expecter{mock: &_m.Mock}
 }
 
+// EncryptIdentity provides a mock function with given fields: ctx, identity
+func (_m *MockSuperHeroUseCase) EncryptIdentity(ctx context.Context, identity domain.Identity) (string, error) {
+	ret := _m.Called(ctx, identity)
+
+	if len(ret) == 0 {
+		panic("no return value specified for EncryptIdentity")
+	}
+
+	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.Identity) (string, error)); ok {
+		return rf(ctx, identity)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.Identity) string); ok {
+		r0 = rf(ctx, identity)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.Identity) error); ok {
+		r1 = rf(ctx, identity)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockSuperHeroUseCase_EncryptIdentity_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'EncryptIdentity'
+type MockSuperHeroUseCase_EncryptIdentity_Call struct {
+	*mock.Call
+}
+
+// EncryptIdentity is a helper method to define mock.On call
+//   - ctx context.Context
+//   - identity domain.Identity
+func (_e *MockSuperHeroUseCase_Expecter) EncryptIdentity(ctx interface{}, identity interface{}) *MockSuperHeroUseCase_EncryptIdentity_Call {
+	return &MockSuperHeroUseCase_EncryptIdentity_Call{Call: _e.mock.On("EncryptIdentity", ctx, identity)}
+}
+
+func (_c *MockSuperHeroUseCase_EncryptIdentity_Call) Run(run func(ctx context.Context, identity domain.Identity)) *MockSuperHeroUseCase_EncryptIdentity_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(domain.Identity))
+	})
+	return _c
+}
+
+func (_c *MockSuperHeroUseCase_EncryptIdentity_Call) Return(_a0 string, _a1 error) *MockSuperHeroUseCase_EncryptIdentity_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockSuperHeroUseCase_EncryptIdentity_Call) RunAndReturn(run func(context.Context, domain.Identity) (string, error)) *MockSuperHeroUseCase_EncryptIdentity_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Fetch provides a mock function with given fields: ctx
 func (_m *MockSuperHeroUseCase) Fetch(ctx context.Context) ([]domain.Superhero, error) {
 	ret := _m.Called(ctx)
@@ -81,7 +138,7 @@ func (_c *MockSuperHeroUseCase_Fetch_Call) RunAndReturn(run func(context.Context
 }
 
 // GetBySuperPower provides a mock function with given fields: ctx, powers
-func (_m *MockSuperHeroUseCase) GetBySuperPower(ctx context.Context, powers map[string]interface{}) ([]domain.Superhero, error) {
+func (_m *MockSuperHeroUseCase) GetBySuperPower(ctx context.Context, powers []string) ([]domain.Superhero, error) {
 	ret := _m.Called(ctx, powers)
 
 	if len(ret) == 0 {
@@ -90,10 +147,10 @@ func (_m *MockSuperHeroUseCase) GetBySuperPower(ctx context.Context, powers map[
 
 	var r0 []domain.Superhero
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, map[string]interface{}) ([]domain.Superhero, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []string) ([]domain.Superhero, error)); ok {
 		return rf(ctx, powers)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, map[string]interface{}) []domain.Superhero); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []string) []domain.Superhero); ok {
 		r0 = rf(ctx, powers)
 	} else {
 		if ret.Get(0) != nil {
@@ -101,7 +158,7 @@ func (_m *MockSuperHeroUseCase) GetBySuperPower(ctx context.Context, powers map[
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, map[string]interface{}) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, []string) error); ok {
 		r1 = rf(ctx, powers)
 	} else {
 		r1 = ret.Error(1)
@@ -117,14 +174,14 @@ type MockSuperHeroUseCase_GetBySuperPower_Call struct {
 
 // GetBySuperPower is a helper method to define mock.On call
 //   - ctx context.Context
-//   - powers map[string]interface{}
+//   - powers []string
 func (_e *MockSuperHeroUseCase_Expecter) GetBySuperPower(ctx interface{}, powers interface{}) *MockSuperHeroUseCase_GetBySuperPower_Call {
 	return &MockSuperHeroUseCase_GetBySuperPower_Call{Call: _e.mock.On("GetBySuperPower", ctx, powers)}
 }
 
-func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) Run(run func(ctx context.Context, powers map[string]interface{})) *MockSuperHeroUseCase_GetBySuperPower_Call {
+func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) Run(run func(ctx context.Context, powers []string)) *MockSuperHeroUseCase_GetBySuperPower_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(map[string]interface{}))
+		run(args[0].(context.Context), args[1].([]string))
 	})
 	return _c
 }
@@ -134,7 +191,7 @@ func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) Return(_a0 []domain.Superhe
 	return _c
 }
 
-func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) RunAndReturn(run func(context.Context, map[string]interface{}) ([]domain.Superhero, error)) *MockSuperHeroUseCase_GetBySuperPower_Call {
+func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) RunAndReturn(run func(context.Context, []string) ([]domain.Superhero, error)) *MockSuperHeroUseCase_GetBySuperPower_Call {
 	_c.Call.Return(run)
 	return _c
 }
