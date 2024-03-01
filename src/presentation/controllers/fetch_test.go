@@ -29,6 +29,7 @@ func (suite *FetchControllerTestSuite) SetupSuite() {
 	suite.sut = controllers.NewFetchController(suite.mockedUseCase, suite.mockEncrypter)
 }
 
+// This TestSuite is responsible for testing the FetchSuperHeroController
 func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 	expected := []shero_domain.Superhero{
 		{
@@ -70,6 +71,7 @@ func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 	suite.Assertions.Equal(uint(200), actual.StatusCode)
 }
 
+// This TestSuite is responsible for testing the opportunity to filter the heroes by different super powers.
 func (suite *FetchControllerTestSuite) TestShouldReturnHeroesWithDifferentSuperPowers() {
 	suite.mockedUseCase.EXPECT().Fetch(suite.ctx, mock.Anything).Return(testutils.GetSuperHeroes(), nil)
 	suite.mockedUseCase.EXPECT().EncryptIdentity(suite.ctx, mock.Anything).Return("mock", nil)
