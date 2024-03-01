@@ -6,9 +6,9 @@ import (
 
 type (
 	Response[T any] struct {
-		StatusCode uint  `json:"statusCode"`
-		Data       T     `json:"data"`
-		Error      error `json:"error"`
+		StatusCode uint  `json:"statusCode,omitempty"`
+		Data       T     `json:"data,omitempty"`
+		Error      error `json:"error,omitempty"`
 	}
 	Request[T any] struct {
 		Body    T `json:"body"`

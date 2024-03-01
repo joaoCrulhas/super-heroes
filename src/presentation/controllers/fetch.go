@@ -39,7 +39,7 @@ func (controller *FetchSuperHeroController) Wrapper(ctx context.Context, r *web.
 	if response.Error != nil {
 		return controller.responder.ServerErrorWithCodeAndTemplate(response.Error, "error/withCode", response.StatusCode)
 	}
-	return controller.responder.Data(response.Data).Status(response.StatusCode)
+	return controller.responder.Data(response).Status(response.StatusCode)
 }
 
 func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request presentation.Request[any], data []domain.Superhero) ([]domain.SuperHeroWithEncryptIdentity, error) {
@@ -64,15 +64,11 @@ func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request
 }
 
 func (controller *FetchSuperHeroController) Handle(ctx context.Context, request presentation.Request[any]) presentation.Response[SuperHeroResponse] {
+	var filter map[string][]string
 	if len(request.Query) > 0 {
-		statusCode, heroes, err := controller.filter(request, ctx)
-		if err != nil {
-			return presentation.CreateResponse[SuperHeroResponse](uint(statusCode), nil, err)
-		}
-		superHeroesParsed, err := controller.isAdmin(ctx, request, heroes)
-		return presentation.CreateResponse[SuperHeroResponse](uint(statusCode), superHeroesParsed, err)
+		filter = request.Query
 	}
-	data, err := controller.superHerUseCase.Fetch(ctx)
+	data, err := controller.superHerUseCase.Fetch(ctx, filter)
 	if err != nil {
 		return presentation.CreateResponse[SuperHeroResponse](http.StatusInternalServerError, nil, err)
 	}
@@ -81,18 +77,4 @@ func (controller *FetchSuperHeroController) Handle(ctx context.Context, request 
 		return presentation.CreateResponse[SuperHeroResponse](http.StatusOK, nil, err)
 	}
 	return presentation.CreateResponse[SuperHeroResponse](http.StatusOK, superHeroesParsed, nil)
-}
-
-func (controller *FetchSuperHeroController) filter(request presentation.Request[any], ctx context.Context) (int, []domain.Superhero, error) {
-	var data []domain.Superhero
-	var err error
-	for key, val := range request.Query {
-		switch key {
-		case presentation.SuperPowerFilter:
-			data, err = controller.superHerUseCase.GetBySuperPower(ctx, val)
-		default:
-			return http.StatusBadRequest, nil, domain.BadRequest("invalid filter")
-		}
-	}
-	return http.StatusOK, data, err
 }

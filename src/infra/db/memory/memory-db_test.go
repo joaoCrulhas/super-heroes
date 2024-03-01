@@ -85,6 +85,33 @@ func (suite *MemoryDbTestSuite) TestShouldMatchTwoSuperPowers() {
 	suite.Equal(expected, got)
 }
 
+func (suite *MemoryDbTestSuite) TestShouldReturnASuperHeroIfMatches() {
+	filter := map[string][]string{"superpowers": {"strength", "healing"}}
+	fmt.Println("From TestExample")
+	expected := []domain.Superhero{
+		{
+			Name: "superHero1",
+			Identity: domain.Identity{
+				FirstName: "Snyder",
+				LastName:  "Johnston",
+			},
+			Birthday:    "1990-04-14",
+			Superpowers: []string{"flight", "strength", "invulnerability"},
+		},
+		{
+			Name: "Super Hero 3",
+			Identity: domain.Identity{
+				FirstName: "Petra",
+				LastName:  "Sharpe",
+			},
+			Birthday:    "1998-04-18", // Batman's first appearance in comics
+			Superpowers: []string{"healing"},
+		},
+	}
+	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
+	suite.Equal(expected, got)
+}
+
 func (suite *MemoryDbTestSuite) TestShouldReturnAnEmptyArrayIfNoSuperHeroWithSuperPower() {
 	filter := map[string][]string{"superpowers": {"invisibility"}}
 	fmt.Println("From TestExample")

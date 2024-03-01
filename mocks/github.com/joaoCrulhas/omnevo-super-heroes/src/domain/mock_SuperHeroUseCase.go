@@ -79,9 +79,9 @@ func (_c *MockSuperHeroUseCase_EncryptIdentity_Call) RunAndReturn(run func(conte
 	return _c
 }
 
-// Fetch provides a mock function with given fields: ctx
-func (_m *MockSuperHeroUseCase) Fetch(ctx context.Context) ([]domain.Superhero, error) {
-	ret := _m.Called(ctx)
+// Fetch provides a mock function with given fields: ctx, filter
+func (_m *MockSuperHeroUseCase) Fetch(ctx context.Context, filter map[string][]string) ([]domain.Superhero, error) {
+	ret := _m.Called(ctx, filter)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Fetch")
@@ -89,19 +89,19 @@ func (_m *MockSuperHeroUseCase) Fetch(ctx context.Context) ([]domain.Superhero, 
 
 	var r0 []domain.Superhero
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]domain.Superhero, error)); ok {
-		return rf(ctx)
+	if rf, ok := ret.Get(0).(func(context.Context, map[string][]string) ([]domain.Superhero, error)); ok {
+		return rf(ctx, filter)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) []domain.Superhero); ok {
-		r0 = rf(ctx)
+	if rf, ok := ret.Get(0).(func(context.Context, map[string][]string) []domain.Superhero); ok {
+		r0 = rf(ctx, filter)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]domain.Superhero)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
-		r1 = rf(ctx)
+	if rf, ok := ret.Get(1).(func(context.Context, map[string][]string) error); ok {
+		r1 = rf(ctx, filter)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -116,13 +116,14 @@ type MockSuperHeroUseCase_Fetch_Call struct {
 
 // Fetch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSuperHeroUseCase_Expecter) Fetch(ctx interface{}) *MockSuperHeroUseCase_Fetch_Call {
-	return &MockSuperHeroUseCase_Fetch_Call{Call: _e.mock.On("Fetch", ctx)}
+//   - filter map[string][]string
+func (_e *MockSuperHeroUseCase_Expecter) Fetch(ctx interface{}, filter interface{}) *MockSuperHeroUseCase_Fetch_Call {
+	return &MockSuperHeroUseCase_Fetch_Call{Call: _e.mock.On("Fetch", ctx, filter)}
 }
 
-func (_c *MockSuperHeroUseCase_Fetch_Call) Run(run func(ctx context.Context)) *MockSuperHeroUseCase_Fetch_Call {
+func (_c *MockSuperHeroUseCase_Fetch_Call) Run(run func(ctx context.Context, filter map[string][]string)) *MockSuperHeroUseCase_Fetch_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context))
+		run(args[0].(context.Context), args[1].(map[string][]string))
 	})
 	return _c
 }
@@ -132,7 +133,7 @@ func (_c *MockSuperHeroUseCase_Fetch_Call) Return(_a0 []domain.Superhero, _a1 er
 	return _c
 }
 
-func (_c *MockSuperHeroUseCase_Fetch_Call) RunAndReturn(run func(context.Context) ([]domain.Superhero, error)) *MockSuperHeroUseCase_Fetch_Call {
+func (_c *MockSuperHeroUseCase_Fetch_Call) RunAndReturn(run func(context.Context, map[string][]string) ([]domain.Superhero, error)) *MockSuperHeroUseCase_Fetch_Call {
 	_c.Call.Return(run)
 	return _c
 }
