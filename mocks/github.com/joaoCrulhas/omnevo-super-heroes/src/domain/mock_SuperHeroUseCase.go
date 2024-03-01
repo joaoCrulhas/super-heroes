@@ -22,6 +22,63 @@ func (_m *MockSuperHeroUseCase) EXPECT() *MockSuperHeroUseCase_Expecter {
 	return &MockSuperHeroUseCase_Expecter{mock: &_m.Mock}
 }
 
+// Create provides a mock function with given fields: ctx, superHero
+func (_m *MockSuperHeroUseCase) Create(ctx context.Context, superHero domain.Superhero) (domain.SuperHeroWithEncryptIdentity, error) {
+	ret := _m.Called(ctx, superHero)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Create")
+	}
+
+	var r0 domain.SuperHeroWithEncryptIdentity
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.Superhero) (domain.SuperHeroWithEncryptIdentity, error)); ok {
+		return rf(ctx, superHero)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.Superhero) domain.SuperHeroWithEncryptIdentity); ok {
+		r0 = rf(ctx, superHero)
+	} else {
+		r0 = ret.Get(0).(domain.SuperHeroWithEncryptIdentity)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.Superhero) error); ok {
+		r1 = rf(ctx, superHero)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockSuperHeroUseCase_Create_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Create'
+type MockSuperHeroUseCase_Create_Call struct {
+	*mock.Call
+}
+
+// Create is a helper method to define mock.On call
+//   - ctx context.Context
+//   - superHero domain.Superhero
+func (_e *MockSuperHeroUseCase_Expecter) Create(ctx interface{}, superHero interface{}) *MockSuperHeroUseCase_Create_Call {
+	return &MockSuperHeroUseCase_Create_Call{Call: _e.mock.On("Create", ctx, superHero)}
+}
+
+func (_c *MockSuperHeroUseCase_Create_Call) Run(run func(ctx context.Context, superHero domain.Superhero)) *MockSuperHeroUseCase_Create_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(domain.Superhero))
+	})
+	return _c
+}
+
+func (_c *MockSuperHeroUseCase_Create_Call) Return(_a0 domain.SuperHeroWithEncryptIdentity, _a1 error) *MockSuperHeroUseCase_Create_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockSuperHeroUseCase_Create_Call) RunAndReturn(run func(context.Context, domain.Superhero) (domain.SuperHeroWithEncryptIdentity, error)) *MockSuperHeroUseCase_Create_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // EncryptIdentity provides a mock function with given fields: ctx, identity
 func (_m *MockSuperHeroUseCase) EncryptIdentity(ctx context.Context, identity domain.Identity) (string, error) {
 	ret := _m.Called(ctx, identity)

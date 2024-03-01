@@ -22,6 +22,7 @@ type (
 		Fetch(ctx context.Context, filter map[string][]string) ([]Superhero, error)
 		GetBySuperPower(ctx context.Context, powers []string) ([]Superhero, error)
 		EncryptIdentity(ctx context.Context, identity Identity) (string, error)
+		Create(ctx context.Context, superHero Superhero) (SuperHeroWithEncryptIdentity, error)
 	}
 
 	SuperHeroWithEncryptIdentity struct {
