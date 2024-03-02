@@ -1,0 +1,14 @@
+###
+// Create a new super hero
+POST http://localhost:3322/super-heroes HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+  "name": "Superman",
+  "identity": {
+    "firstName": "Clark",
+    "lastName": "Kent"
+  },
+  "superPowers": ["flight", "super strength"]
+}
