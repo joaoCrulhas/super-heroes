@@ -22,6 +22,7 @@ type (
 		Fetch(ctx context.Context, filter map[string][]string) ([]Superhero, error)
 		GetBySuperPower(ctx context.Context, powers []string) ([]Superhero, error)
 		EncryptIdentity(ctx context.Context, identity Identity) (string, error)
+		Create(ctx context.Context, superHero Superhero) (SuperHeroWithEncryptIdentity, error)
 	}
 
 	SuperHeroWithEncryptIdentity struct {
@@ -32,20 +33,20 @@ type (
 	}
 )
 
+func ParseSuperHero(superHero Superhero) SuperHeroWithEncryptIdentity {
+	return SuperHeroWithEncryptIdentity{
+		Name:        superHero.Name,
+		Identity:    superHero.Identity.FirstName + " " + superHero.Identity.LastName,
+		Birthday:    superHero.Birthday,
+		Superpowers: superHero.Superpowers,
+	}
+}
 func ParseResponse(superHeroes []Superhero) []SuperHeroWithEncryptIdentity {
 	var response []SuperHeroWithEncryptIdentity
 	for _, superHero := range superHeroes {
-		response = append(response, SuperHeroWithEncryptIdentity{
-			Name:        superHero.Name,
-			Identity:    superHero.Identity.FirstName + " " + superHero.Identity.LastName,
-			Birthday:    superHero.Birthday,
-			Superpowers: superHero.Superpowers,
-		})
+		parsedSuperHero := ParseSuperHero(superHero)
+		response = append(response, parsedSuperHero)
 	}
 	return response
 
 }
-
-/* Coisas pra fazer amanhã:
-1) Adaptar a resposta para ter o campo identity com o fullName e o lastName
-*/

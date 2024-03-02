@@ -1,0 +1,31 @@
+// Return all super heroes
+GET http://localhost:3322/super-heroes HTTP/1.1
+content-type: application/json
+Accept: application/json
+###
+// Return all super heroes with a specific super power
+GET http://localhost:3322/super-heroes?superpowers=healing HTTP/1.1
+content-type: application/json
+Accept: application/json
+
+// Return all super heroes with specifics super-powesr
+###
+GET http://localhost:3322/super-heroes?superpowers=healing,flight HTTP/1.1
+content-type: application/json
+Accept: application/json
+
+
+###
+// Create a new super hero
+POST http://localhost:3322/super-heroes HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+  "name": "Superman",
+  "identity": {
+    "firstName": "Clark",
+    "lastName": "Kent"
+  },
+  "superPowers": ["flight", "super strength"]
+}
