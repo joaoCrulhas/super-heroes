@@ -44,3 +44,8 @@ func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[s
 	}
 	return heroes, nil
 }
+
+func (r *SuperHeroMemoryRepository) Create(c context.Context, item domain.Superhero) (domain.Superhero, error) {
+	r.superHeroes = append(r.superHeroes, item)
+	return item, nil
+}
