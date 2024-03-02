@@ -21,6 +21,15 @@ func (su *superHeroUseCase) Inject(repository db.Repository[domain.Superhero], e
 	su.encrypter = encrypter
 }
 
+func (su *superHeroUseCase) Create(ctx context.Context, superHero domain.Superhero) (domain.SuperHeroWithEncryptIdentity, error) {
+	superHeroCreated, err := su.repository.Create(ctx, superHero)
+
+	if err != nil {
+		return domain.SuperHeroWithEncryptIdentity{}, err
+	}
+	return domain.ParseSuperHero(superHeroCreated), nil
+}
+
 func (su *superHeroUseCase) Fetch(ctx context.Context, filter map[string][]string) ([]domain.Superhero, error) {
 	if filter == nil {
 		return su.repository.Fetch(ctx)
