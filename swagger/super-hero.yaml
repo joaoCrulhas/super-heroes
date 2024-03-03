@@ -1,0 +1,109 @@
+openapi: 3.0.0
+info:
+  title: Super Heroes API
+  description: An API for managing super heroes
+  version: 1.0.0
+servers:
+  - url: http://localhost:3322
+paths:
+  /super-heroes:
+    post:
+      summary: Create a new super hero
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                identity:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                superPowers:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Super hero created successfully
+    get:
+      summary: Return all super heroes
+      parameters:
+        - name: superpowers
+          in: query
+          description: Filter super heroes by specific super powers
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of super heroes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    identity:
+                      type: object
+                      properties:
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                    superPowers:
+                      type: array
+                      items:
+                        type: string
+      security:
+        - X-Dee-See-Admin-Key: []
+  /super-heroes?superpowers={superpowers}:
+    get:
+      summary: Return all super heroes with specific super powers
+      parameters:
+        - name: superpowers
+          in: path
+          description: Comma-separated list of super powers to filter super heroes
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of super heroes with specific super powers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    identity:
+                      type: object
+                      properties:
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                    superPowers:
+                      type: array
+                      items:
+                        type: string
+      security:
+        - X-Dee-See-Admin-Key: []
+components:
+  securitySchemes:
+    X-Dee-See-Admin-Key:
+      type: apiKey
+      in: header
+      name: X-Dee-See-Admin-Key
