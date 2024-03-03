@@ -8,6 +8,7 @@ var SuperPowers = []string{"strength", "speed", "flight", "invulnerability", "he
 
 type (
 	Superhero struct {
+		ID          uint64   `json:"id"`
 		Name        string   `json:"name,omitempty"`
 		Identity    Identity `json:"identity,omitempty"`
 		Birthday    string   `json:"birthday,omitempty"`
@@ -26,6 +27,7 @@ type (
 	}
 
 	SuperHeroWithEncryptIdentity struct {
+		ID          uint64   `json:"id"`
 		Name        string   `json:"name,omitempty"`
 		Identity    string   `json:"identity,omitempty"`
 		Birthday    string   `json:"birthday,omitempty"`
@@ -35,6 +37,7 @@ type (
 
 func ParseSuperHero(superHero Superhero) SuperHeroWithEncryptIdentity {
 	return SuperHeroWithEncryptIdentity{
+		ID:          superHero.ID,
 		Name:        superHero.Name,
 		Identity:    superHero.Identity.FirstName + " " + superHero.Identity.LastName,
 		Birthday:    superHero.Birthday,
