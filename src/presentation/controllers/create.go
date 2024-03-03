@@ -14,17 +14,20 @@ type CreateSuperHeroController struct {
 	superHerUseCase domain.SuperHeroUseCase
 	responder       *web.Responder
 	auth            domain.Authentication[map[string][]string, bool]
+	validators      []Validator
 }
 
 func (controller *CreateSuperHeroController) Inject(responder *web.Responder, superHerUseCase domain.SuperHeroUseCase, encrypter domain.Encrypter, auth domain.Authentication[map[string][]string, bool]) {
 	controller.responder = responder
 	controller.superHerUseCase = superHerUseCase
 	controller.auth = auth
+	controller.validators = append(controller.validators, ValidateSuperPowerInput)
 }
 
-func NewCreateController(superHerUseCase domain.SuperHeroUseCase) *CreateSuperHeroController {
+func NewCreateController(superHerUseCase domain.SuperHeroUseCase, validators ...Validator) *CreateSuperHeroController {
 	return &CreateSuperHeroController{
 		superHerUseCase: superHerUseCase,
+		validators:      validators,
 	}
 }
 
@@ -33,6 +36,16 @@ func (controller *CreateSuperHeroController) Wrapper(ctx context.Context, r *web
 	if err != nil {
 		return controller.responder.ServerError(err)
 	}
+
+	for _, value := range request.Body.Superpowers {
+		for _, validator := range controller.validators {
+			err := validator(value)
+			if err != nil {
+				return controller.responder.ServerErrorWithCodeAndTemplate(err, "error/withCode", http.StatusBadRequest)
+			}
+		}
+	}
+
 	auth, err := controller.auth.Auth(request.Headers)
 	if err != nil || !auth {
 		return controller.responder.ServerErrorWithCodeAndTemplate(err, "error/withCode", http.StatusUnauthorized)

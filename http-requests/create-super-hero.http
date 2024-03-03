@@ -1,16 +1,35 @@
 ###
-@adminKey = myadminkey
-// Create a new super hero
+@adminKey = trasdas0cbd5a5f50515df2afba93e5fa6
+// Create a new super hero 
 POST http://localhost:3322/super-heroes HTTP/1.1
 content-type: application/json
 accept: application/json
 X-Dee-See-Admin-Key: {{adminKey}}
 
 {
-  "name": "Superman",
+  "name": "Spiderman",
   "identity": {
-    "firstName": "Clark",
-    "lastName": "Kent"
+    "firstName": "Peter",
+    "lastName": "Parker"
   },
-  "superPowers": ["flight", "super strength"]
+  "superPowers": ["speed", "strength"]
 }
+###
+
+
+@adminKey = trasdas0cbd5a5f50515df2afba93e5fa6
+// Create a new super hero providing a wrong super power 
+POST http://localhost:3322/super-heroes HTTP/1.1
+content-type: application/json
+accept: application/json
+X-Dee-See-Admin-Key: {{adminKey}}
+
+{
+  "name": "Spiderman",
+  "identity": {
+    "firstName": "Peter",
+    "lastName": "Parker"
+  },
+  "superPowers": ["wrong", "strength"]
+}
+###
