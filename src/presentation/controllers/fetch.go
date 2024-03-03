@@ -55,6 +55,7 @@ func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request
 				return nil, err
 			}
 			superHeroesParsed = append(superHeroesParsed, domain.SuperHeroWithEncryptIdentity{
+				ID:          data[i].ID,
 				Name:        data[i].Name,
 				Identity:    identity,
 				Birthday:    data[i].Birthday,
