@@ -28,7 +28,7 @@ X-Dee-See-Admin-Key: {{adminKey}}
 
 // Return an empty with a wrong superPower
 ###
-GET http://localhost:3322/super-heroes?superpowers=random HTTP/1.1
+GET http://localhost:3322/super-heroes?superpowers=flight&wrong=random HTTP/1.1
 content-type: application/json
 Accept: application/json
 X-Dee-See-Admin-Key: {{adminKey}}
