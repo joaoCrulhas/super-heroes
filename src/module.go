@@ -26,10 +26,11 @@ func (m *Module) Configure(injector *dingo.Injector) {
 	if err != nil {
 		panic(err)
 	}
+	adminAuth := usecases.NewAuthenticationAdmin()
 	encrypter := encrypter.NewEncryptDeeSeeChiffreService(key, MinShiftValue, MaxShiftValue, encrypter_validators.ValidateEmptyInput, encrypter_validators.ValidateSpecialCharacters)
 	superHeroUseCases := usecases.NewSuperHeroUseCase(memoryDb, encrypter)
-
 	web.BindRoutes(injector, new(Routes))
+	injector.Bind(new(domain.Authentication[map[string][]string, bool])).ToInstance(adminAuth)
 	injector.Bind(new(db.Repository[domain.Superhero])).ToInstance(memoryDb)
 	injector.Bind(new(domain.SuperHeroUseCase)).ToInstance(superHeroUseCases)
 	injector.Bind(new(domain.Encrypter)).ToInstance(encrypter)
