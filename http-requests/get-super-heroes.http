@@ -1,7 +1,17 @@
-// Return all super heroes
+@adminKey = myadminkey
+
+
+// Return all super heroes without adminKey to get encrypted identity
 GET http://localhost:3322/super-heroes HTTP/1.1
 content-type: application/json
 Accept: application/json
+###
+
+// Return all super heroes with adminKey to get real identity
+GET http://localhost:3322/super-heroes HTTP/1.1
+content-type: application/json
+Accept: application/json
+X-Dee-See-Admin-Key: {{adminKey}}
 ###
 // Return all super heroes with a specific super power
 GET http://localhost:3322/super-heroes?superpowers=healing HTTP/1.1
@@ -13,5 +23,6 @@ Accept: application/json
 GET http://localhost:3322/super-heroes?superpowers=healing,flight HTTP/1.1
 content-type: application/json
 Accept: application/json
+X-Dee-See-Admin-Key: {{adminKey}}
 
 
