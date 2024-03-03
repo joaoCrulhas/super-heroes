@@ -54,7 +54,7 @@ To run this project the easisest way to do it, is use docker, and import the swa
 
 ```
 docker build -t super-heroes .
-docker run -p 3222:3222 --rm -it --network=host super-heroes:latest
+docker run -d -p 3222:3222 --rm -it --network=host super-heroes:latest
 ```
 
 #### Without docker
