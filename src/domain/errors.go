@@ -9,3 +9,7 @@ func EmptyString() error {
 func BadRequest(msg string) error {
 	return errors.New(msg)
 }
+
+func Unauthorized(msg string) error {
+	return errors.New(msg)
+}
