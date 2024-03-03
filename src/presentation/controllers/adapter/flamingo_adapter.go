@@ -2,7 +2,6 @@ package presentation_adapter
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -32,7 +31,6 @@ func AdapterRequest[T any](r *web.Request) (presentation.Request[T], error) {
 }
 
 func parseQuery(args url.Values) map[string][]string {
-	fmt.Println(args)
 	query := map[string][]string{}
 	for k, v := range args {
 		v = strings.FieldsFunc(v[0], func(r rune) bool {

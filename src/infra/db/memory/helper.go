@@ -19,5 +19,9 @@ func ReadSuperHeroFile(fileName string) ([]domain.Superhero, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	for i := range superHeroes {
+		superHeroes[i].ID = uint64(i + 1)
+	}
 	return superHeroes, nil
 }
