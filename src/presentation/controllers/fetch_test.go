@@ -18,15 +18,17 @@ type FetchControllerTestSuite struct {
 	sut           *controllers.FetchSuperHeroController
 	mockedUseCase *mocks.MockSuperHeroUseCase
 	mockEncrypter *mocks.MockEncrypter
+	mockAdminAuth *mocks.MockAuthentication[map[string][]string, bool]
 	ctx           context.Context
 }
 
 // this function executes before the test suite begins execution
 func (suite *FetchControllerTestSuite) SetupSuite() {
 	suite.ctx = context.Background()
+	suite.mockAdminAuth = mocks.NewMockAuthentication[map[string][]string, bool](suite.T())
 	suite.mockedUseCase = mocks.NewMockSuperHeroUseCase(suite.T())
 	suite.mockEncrypter = mocks.NewMockEncrypter(suite.T())
-	suite.sut = controllers.NewFetchController(suite.mockedUseCase, suite.mockEncrypter)
+	suite.sut = controllers.NewFetchController(suite.mockedUseCase, suite.mockEncrypter, suite.mockAdminAuth)
 }
 
 // This TestSuite is responsible for testing the FetchSuperHeroController
@@ -53,6 +55,7 @@ func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 	}
 	suite.mockedUseCase.EXPECT().Fetch(suite.ctx, mock.Anything).Return(expected, nil)
 	suite.mockedUseCase.EXPECT().EncryptIdentity(suite.ctx, mock.Anything).Return("mock", nil)
+	suite.mockAdminAuth.EXPECT().Auth(mock.Anything).Return(false, shero_domain.Unauthorized("unauthorized"))
 	request := presentation.Request[any]{}
 	actual := suite.sut.Handle(suite.ctx, request)
 	suite.Assertions.Equal(shero_domain.SuperHeroWithEncryptIdentity{

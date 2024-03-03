@@ -13,11 +13,13 @@ import (
 type CreateSuperHeroController struct {
 	superHerUseCase domain.SuperHeroUseCase
 	responder       *web.Responder
+	auth            domain.Authentication[map[string][]string, bool]
 }
 
-func (controller *CreateSuperHeroController) Inject(responder *web.Responder, superHerUseCase domain.SuperHeroUseCase, encrypter domain.Encrypter) {
+func (controller *CreateSuperHeroController) Inject(responder *web.Responder, superHerUseCase domain.SuperHeroUseCase, encrypter domain.Encrypter, auth domain.Authentication[map[string][]string, bool]) {
 	controller.responder = responder
 	controller.superHerUseCase = superHerUseCase
+	controller.auth = auth
 }
 
 func NewCreateController(superHerUseCase domain.SuperHeroUseCase) *CreateSuperHeroController {
@@ -30,6 +32,10 @@ func (controller *CreateSuperHeroController) Wrapper(ctx context.Context, r *web
 	request, err := presentation_adapter.AdapterRequest[domain.Superhero](r)
 	if err != nil {
 		return controller.responder.ServerError(err)
+	}
+	auth, err := controller.auth.Auth(request.Headers)
+	if err != nil || !auth {
+		return controller.responder.ServerErrorWithCodeAndTemplate(err, "error/withCode", http.StatusUnauthorized)
 	}
 	response := controller.Handle(ctx, request)
 	if response.Error != nil {

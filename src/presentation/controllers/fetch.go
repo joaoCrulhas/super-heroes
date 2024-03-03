@@ -15,18 +15,21 @@ type FetchSuperHeroController struct {
 	superHerUseCase domain.SuperHeroUseCase
 	responder       *web.Responder
 	encrypter       domain.Encrypter
+	adminAuth       domain.Authentication[map[string][]string, bool]
 }
 
-func (controller *FetchSuperHeroController) Inject(responder *web.Responder, superHerUseCase domain.SuperHeroUseCase, encrypter domain.Encrypter) {
+func (controller *FetchSuperHeroController) Inject(responder *web.Responder, superHerUseCase domain.SuperHeroUseCase, encrypter domain.Encrypter, adminAuth domain.Authentication[map[string][]string, bool]) {
 	controller.responder = responder
 	controller.superHerUseCase = superHerUseCase
 	controller.encrypter = encrypter
+	controller.adminAuth = adminAuth
 }
 
-func NewFetchController(superHerUseCase domain.SuperHeroUseCase, encrypter domain.Encrypter) *FetchSuperHeroController {
+func NewFetchController(superHerUseCase domain.SuperHeroUseCase, encrypter domain.Encrypter, adminAuth domain.Authentication[map[string][]string, bool]) *FetchSuperHeroController {
 	return &FetchSuperHeroController{
 		superHerUseCase: superHerUseCase,
 		encrypter:       encrypter,
+		adminAuth:       adminAuth,
 	}
 }
 
@@ -44,7 +47,8 @@ func (controller *FetchSuperHeroController) Wrapper(ctx context.Context, r *web.
 
 func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request presentation.Request[any], data []domain.Superhero) ([]domain.SuperHeroWithEncryptIdentity, error) {
 	var superHeroesParsed []domain.SuperHeroWithEncryptIdentity
-	if request.Headers["X-Dee-See-Admin-Key"] == nil {
+	auth, err := controller.adminAuth.Auth(request.Headers)
+	if err != nil || !auth {
 		for i := range data {
 			identity, err := controller.superHerUseCase.EncryptIdentity(ctx, data[i].Identity)
 			if err != nil {
@@ -57,9 +61,9 @@ func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request
 				Superpowers: data[i].Superpowers,
 			})
 		}
-	} else {
-		superHeroesParsed = domain.ParseResponse(data)
+		return superHeroesParsed, nil
 	}
+	superHeroesParsed = domain.ParseResponse(data)
 	return superHeroesParsed, nil
 }
 
