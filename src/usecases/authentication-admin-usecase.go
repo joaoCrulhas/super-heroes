@@ -17,9 +17,10 @@ func (c *AuthenticationAdmin) Inject(
 		APIKey string `inject:"config:deesee.apikey"`
 	},
 ) *AuthenticationAdmin {
-	if cfg != nil {
-		c.apiKey = cfg.APIKey
+	if cfg == nil {
+		panic("please provide a valid config, dee see api key is missing")
 	}
+	c.apiKey = cfg.APIKey
 	return c
 }
 
