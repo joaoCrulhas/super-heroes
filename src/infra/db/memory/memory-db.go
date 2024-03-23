@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"sync"
 
 	"github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
 	"golang.org/x/exp/slices"
@@ -31,17 +32,26 @@ func (r *SuperHeroMemoryRepository) Fetch(c context.Context) (domain.SuperHerosD
 
 func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[string][]string) (domain.SuperHerosData, error) {
 	heroes := domain.SuperHerosData{}
+	wg := sync.WaitGroup{}
+	mu := sync.Mutex{}
 	for _, hero := range r.superHeroes {
-		for k, v := range filter {
-			if k == "superpowers" {
-				for _, s := range v {
-					if slices.Contains(hero.Superpowers, s) {
-						heroes[hero.ID] = hero
+		wg.Add(1)
+		go func(h domain.Superhero) {
+			defer wg.Done()
+			for k, v := range filter {
+				if k == "superpowers" {
+					for _, s := range v {
+						if slices.Contains(h.Superpowers, s) {
+							mu.Lock()
+							heroes[h.ID] = &h
+							mu.Unlock()
+						}
 					}
 				}
 			}
-		}
+		}(*hero)
 	}
+	wg.Wait()
 	return heroes, nil
 }
 
