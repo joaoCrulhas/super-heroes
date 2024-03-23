@@ -8,7 +8,7 @@ var SuperPowers = []string{"strength", "speed", "flight", "invulnerability", "he
 
 type (
 	Superhero struct {
-		ID          uint64   `json:"id"`
+		ID          int      `json:"id"`
 		Name        string   `json:"name,omitempty"`
 		Identity    Identity `json:"identity,omitempty"`
 		Birthday    string   `json:"birthday,omitempty"`
@@ -20,14 +20,14 @@ type (
 	}
 	// This is the usecases for the SuperHero Domain
 	SuperHeroUseCase interface {
-		Fetch(ctx context.Context, filter map[string][]string) ([]Superhero, error)
-		GetBySuperPower(ctx context.Context, powers []string) ([]Superhero, error)
+		Fetch(ctx context.Context, filter map[string][]string) (map[int]Superhero, error)
+		GetBySuperPower(ctx context.Context, powers []string) (map[int]Superhero, error)
 		EncryptIdentity(ctx context.Context, identity Identity) (string, error)
 		Create(ctx context.Context, superHero Superhero) (SuperHeroWithEncryptIdentity, error)
 	}
 
 	SuperHeroWithEncryptIdentity struct {
-		ID          uint64   `json:"id"`
+		ID          int      `json:"id"`
 		Name        string   `json:"name,omitempty"`
 		Identity    string   `json:"identity,omitempty"`
 		Birthday    string   `json:"birthday,omitempty"`
@@ -44,7 +44,7 @@ func ParseSuperHero(superHero Superhero) SuperHeroWithEncryptIdentity {
 		Superpowers: superHero.Superpowers,
 	}
 }
-func ParseResponse(superHeroes []Superhero) []SuperHeroWithEncryptIdentity {
+func ParseResponse(superHeroes map[int]Superhero) []SuperHeroWithEncryptIdentity {
 	var response []SuperHeroWithEncryptIdentity
 	for _, superHero := range superHeroes {
 		parsedSuperHero := ParseSuperHero(superHero)

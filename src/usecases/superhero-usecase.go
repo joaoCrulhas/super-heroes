@@ -30,14 +30,14 @@ func (su *superHeroUseCase) Create(ctx context.Context, superHero domain.Superhe
 	return domain.ParseSuperHero(superHeroCreated), nil
 }
 
-func (su *superHeroUseCase) Fetch(ctx context.Context, filter map[string][]string) ([]domain.Superhero, error) {
+func (su *superHeroUseCase) Fetch(ctx context.Context, filter map[string][]string) (map[int]domain.Superhero, error) {
 	if filter == nil {
 		return su.repository.Fetch(ctx)
 	}
 	return su.repository.FindByFilter(ctx, filter)
 }
 
-func (su *superHeroUseCase) GetBySuperPower(ctx context.Context, powers []string) ([]domain.Superhero, error) {
+func (su *superHeroUseCase) GetBySuperPower(ctx context.Context, powers []string) (map[int]domain.Superhero, error) {
 	return su.repository.FindByFilter(ctx, map[string][]string{"superpowers": powers})
 }
 

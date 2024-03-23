@@ -137,23 +137,23 @@ func (_c *MockSuperHeroUseCase_EncryptIdentity_Call) RunAndReturn(run func(conte
 }
 
 // Fetch provides a mock function with given fields: ctx, filter
-func (_m *MockSuperHeroUseCase) Fetch(ctx context.Context, filter map[string][]string) ([]domain.Superhero, error) {
+func (_m *MockSuperHeroUseCase) Fetch(ctx context.Context, filter map[string][]string) (map[int]domain.Superhero, error) {
 	ret := _m.Called(ctx, filter)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Fetch")
 	}
 
-	var r0 []domain.Superhero
+	var r0 map[int]domain.Superhero
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, map[string][]string) ([]domain.Superhero, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, map[string][]string) (map[int]domain.Superhero, error)); ok {
 		return rf(ctx, filter)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, map[string][]string) []domain.Superhero); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, map[string][]string) map[int]domain.Superhero); ok {
 		r0 = rf(ctx, filter)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]domain.Superhero)
+			r0 = ret.Get(0).(map[int]domain.Superhero)
 		}
 	}
 
@@ -185,34 +185,34 @@ func (_c *MockSuperHeroUseCase_Fetch_Call) Run(run func(ctx context.Context, fil
 	return _c
 }
 
-func (_c *MockSuperHeroUseCase_Fetch_Call) Return(_a0 []domain.Superhero, _a1 error) *MockSuperHeroUseCase_Fetch_Call {
+func (_c *MockSuperHeroUseCase_Fetch_Call) Return(_a0 map[int]domain.Superhero, _a1 error) *MockSuperHeroUseCase_Fetch_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockSuperHeroUseCase_Fetch_Call) RunAndReturn(run func(context.Context, map[string][]string) ([]domain.Superhero, error)) *MockSuperHeroUseCase_Fetch_Call {
+func (_c *MockSuperHeroUseCase_Fetch_Call) RunAndReturn(run func(context.Context, map[string][]string) (map[int]domain.Superhero, error)) *MockSuperHeroUseCase_Fetch_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetBySuperPower provides a mock function with given fields: ctx, powers
-func (_m *MockSuperHeroUseCase) GetBySuperPower(ctx context.Context, powers []string) ([]domain.Superhero, error) {
+func (_m *MockSuperHeroUseCase) GetBySuperPower(ctx context.Context, powers []string) (map[int]domain.Superhero, error) {
 	ret := _m.Called(ctx, powers)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetBySuperPower")
 	}
 
-	var r0 []domain.Superhero
+	var r0 map[int]domain.Superhero
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, []string) ([]domain.Superhero, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []string) (map[int]domain.Superhero, error)); ok {
 		return rf(ctx, powers)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, []string) []domain.Superhero); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []string) map[int]domain.Superhero); ok {
 		r0 = rf(ctx, powers)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]domain.Superhero)
+			r0 = ret.Get(0).(map[int]domain.Superhero)
 		}
 	}
 
@@ -244,12 +244,12 @@ func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) Run(run func(ctx context.Co
 	return _c
 }
 
-func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) Return(_a0 []domain.Superhero, _a1 error) *MockSuperHeroUseCase_GetBySuperPower_Call {
+func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) Return(_a0 map[int]domain.Superhero, _a1 error) *MockSuperHeroUseCase_GetBySuperPower_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) RunAndReturn(run func(context.Context, []string) ([]domain.Superhero, error)) *MockSuperHeroUseCase_GetBySuperPower_Call {
+func (_c *MockSuperHeroUseCase_GetBySuperPower_Call) RunAndReturn(run func(context.Context, []string) (map[int]domain.Superhero, error)) *MockSuperHeroUseCase_GetBySuperPower_Call {
 	_c.Call.Return(run)
 	return _c
 }
