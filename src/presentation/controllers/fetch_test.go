@@ -33,8 +33,9 @@ func (suite *FetchControllerTestSuite) SetupSuite() {
 
 // This TestSuite is responsible for testing the FetchSuperHeroController
 func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
-	expected := map[int]shero_domain.Superhero{}
-	expected[1] = shero_domain.Superhero{
+	expected := shero_domain.SuperHerosData{}
+
+	expected[1] = &shero_domain.Superhero{
 		Name: "superHero1",
 		Identity: shero_domain.Identity{
 			FirstName: "Snyder",
@@ -43,7 +44,7 @@ func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 		Birthday:    "1990-04-14",
 		Superpowers: []string{"flight", "strength", "invulnerability"},
 	}
-	expected[2] = shero_domain.Superhero{
+	expected[2] = &shero_domain.Superhero{
 		Name: "Super Hero 2",
 		Identity: shero_domain.Identity{
 			FirstName: "Snyder",

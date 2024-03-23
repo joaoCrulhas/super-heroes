@@ -57,8 +57,8 @@ func (suite *MemoryDbTestSuite) TestUsingFindByFilter() {
 
 func (suite *MemoryDbTestSuite) TestShouldMatchTwoSuperPowers() {
 	filter := map[string][]string{"superpowers": {"strength", "healing"}}
-	exp := map[int]domain.Superhero{}
-	exp[1] = domain.Superhero{
+	exp := domain.SuperHerosData{}
+	exp[1] = &domain.Superhero{
 		ID:   1,
 		Name: "superHero1",
 		Identity: domain.Identity{
@@ -68,7 +68,7 @@ func (suite *MemoryDbTestSuite) TestShouldMatchTwoSuperPowers() {
 		Birthday:    "1990-04-14",
 		Superpowers: []string{"flight", "strength", "invulnerability"},
 	}
-	exp[3] = domain.Superhero{
+	exp[3] = &domain.Superhero{
 		ID:   3,
 		Name: "superHero3",
 		Identity: domain.Identity{
@@ -86,7 +86,7 @@ func (suite *MemoryDbTestSuite) TestShouldReturnASuperHeroIfMatches() {
 	filter := map[string][]string{"superpowers": {"strength", "healing"}}
 
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
-	suite.Equal(domain.Superhero{
+	suite.Equal(&domain.Superhero{
 		ID:   1,
 		Name: "superHero1",
 		Identity: domain.Identity{
@@ -96,7 +96,7 @@ func (suite *MemoryDbTestSuite) TestShouldReturnASuperHeroIfMatches() {
 		Birthday:    "1990-04-14",
 		Superpowers: []string{"flight", "strength", "invulnerability"},
 	}, got[1])
-	suite.Equal(domain.Superhero{
+	suite.Equal(&domain.Superhero{
 		ID:          3,
 		Name:        "superHero3",
 		Birthday:    "1990-04-14",
@@ -116,8 +116,8 @@ func (suite *MemoryDbTestSuite) TestShouldReturnAnEmptyArrayIfNoSuperHeroWithSup
 
 func (suite *MemoryDbTestSuite) TestShouldNotReturnRepetitiveSuperHero() {
 	filter := map[string][]string{"superpowers": {"invisibility", "healing"}}
-	mockMap := map[int]domain.Superhero{}
-	mockMap[1] = domain.Superhero{
+	mockMap := domain.SuperHerosData{}
+	mockMap[1] = &domain.Superhero{
 		Name:        "superHero1",
 		ID:          1,
 		Birthday:    "1990-04-14",
@@ -129,7 +129,7 @@ func (suite *MemoryDbTestSuite) TestShouldNotReturnRepetitiveSuperHero() {
 	}
 	sut, _ := db.NewSuperHeroMemoryRepository(mockMap)
 	got, _ := sut.FindByFilter(suite.ctx, filter)
-	suite.Equal(domain.Superhero{
+	suite.Equal(&domain.Superhero{
 		ID:   1,
 		Name: "superHero1",
 		Identity: domain.Identity{

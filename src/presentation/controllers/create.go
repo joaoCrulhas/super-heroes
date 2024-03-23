@@ -32,7 +32,7 @@ func NewCreateController(superHerUseCase domain.SuperHeroUseCase, validators ...
 }
 
 func (controller *CreateSuperHeroController) Wrapper(ctx context.Context, r *web.Request) web.Result {
-	request, err := presentation_adapter.AdapterRequest[domain.Superhero](r)
+	request, err := presentation_adapter.AdapterRequest[*domain.Superhero](r)
 	if err != nil {
 		return controller.responder.ServerError(err)
 	}
@@ -52,7 +52,7 @@ func (controller *CreateSuperHeroController) Wrapper(ctx context.Context, r *web
 	return controller.responder.Data(response).Status(response.StatusCode)
 }
 
-func (controller *CreateSuperHeroController) validateSuperPowers(request presentation.Request[domain.Superhero]) error {
+func (controller *CreateSuperHeroController) validateSuperPowers(request presentation.Request[*domain.Superhero]) error {
 	for _, value := range request.Body.Superpowers {
 		for _, validator := range controller.validators {
 			err := validator(value)
@@ -64,7 +64,7 @@ func (controller *CreateSuperHeroController) validateSuperPowers(request present
 	return nil
 }
 
-func (controller *CreateSuperHeroController) Handle(ctx context.Context, request presentation.Request[domain.Superhero]) presentation.Response[domain.SuperHeroWithEncryptIdentity] {
+func (controller *CreateSuperHeroController) Handle(ctx context.Context, request presentation.Request[*domain.Superhero]) presentation.Response[domain.SuperHeroWithEncryptIdentity] {
 	hero, err := controller.superHerUseCase.Create(ctx, request.Body)
 	if err != nil {
 		return presentation.CreateResponse[domain.SuperHeroWithEncryptIdentity](500, domain.SuperHeroWithEncryptIdentity{}, err)

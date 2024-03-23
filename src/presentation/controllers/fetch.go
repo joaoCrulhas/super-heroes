@@ -45,7 +45,7 @@ func (controller *FetchSuperHeroController) Wrapper(ctx context.Context, r *web.
 	return controller.responder.Data(response).Status(response.StatusCode)
 }
 
-func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request presentation.Request[any], data map[int]domain.Superhero) ([]domain.SuperHeroWithEncryptIdentity, error) {
+func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request presentation.Request[any], data domain.SuperHerosData) ([]domain.SuperHeroWithEncryptIdentity, error) {
 	var superHeroesParsed []domain.SuperHeroWithEncryptIdentity
 	auth, err := controller.adminAuth.Auth(request.Headers)
 	if err != nil || !auth {

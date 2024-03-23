@@ -2,9 +2,9 @@ package testutils
 
 import "github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
 
-func GetSuperHeroes() map[int]domain.Superhero {
-	heroes := map[int]domain.Superhero{}
-	heroes[1] = domain.Superhero{
+func GetSuperHeroes() domain.SuperHerosData {
+	heroes := domain.SuperHerosData{}
+	heroes[1] = &domain.Superhero{
 		ID:   1,
 		Name: "superHero1",
 		Identity: domain.Identity{
@@ -14,7 +14,7 @@ func GetSuperHeroes() map[int]domain.Superhero {
 		Birthday:    "1990-04-14",
 		Superpowers: []string{"flight", "strength", "invulnerability"},
 	}
-	heroes[2] = domain.Superhero{
+	heroes[2] = &domain.Superhero{
 		ID:   2,
 		Name: "superHero2",
 		Identity: domain.Identity{
@@ -24,7 +24,7 @@ func GetSuperHeroes() map[int]domain.Superhero {
 		Birthday:    "1990-04-14",
 		Superpowers: []string{},
 	}
-	heroes[3] = domain.Superhero{
+	heroes[3] = &domain.Superhero{
 		ID:   3,
 		Name: "superHero3",
 		Identity: domain.Identity{

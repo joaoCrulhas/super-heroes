@@ -20,10 +20,10 @@ type (
 	}
 	// This is the usecases for the SuperHero Domain
 	SuperHeroUseCase interface {
-		Fetch(ctx context.Context, filter map[string][]string) (map[int]Superhero, error)
-		GetBySuperPower(ctx context.Context, powers []string) (map[int]Superhero, error)
+		Fetch(ctx context.Context, filter map[string][]string) (SuperHerosData, error)
+		GetBySuperPower(ctx context.Context, powers []string) (SuperHerosData, error)
 		EncryptIdentity(ctx context.Context, identity Identity) (string, error)
-		Create(ctx context.Context, superHero Superhero) (SuperHeroWithEncryptIdentity, error)
+		Create(ctx context.Context, superHero *Superhero) (SuperHeroWithEncryptIdentity, error)
 	}
 
 	SuperHeroWithEncryptIdentity struct {
@@ -35,7 +35,7 @@ type (
 	}
 )
 
-func ParseSuperHero(superHero Superhero) SuperHeroWithEncryptIdentity {
+func ParseSuperHero(superHero *Superhero) SuperHeroWithEncryptIdentity {
 	return SuperHeroWithEncryptIdentity{
 		ID:          superHero.ID,
 		Name:        superHero.Name,
@@ -44,7 +44,7 @@ func ParseSuperHero(superHero Superhero) SuperHeroWithEncryptIdentity {
 		Superpowers: superHero.Superpowers,
 	}
 }
-func ParseResponse(superHeroes map[int]Superhero) []SuperHeroWithEncryptIdentity {
+func ParseResponse(superHeroes SuperHerosData) []SuperHeroWithEncryptIdentity {
 	var response []SuperHeroWithEncryptIdentity
 	for _, superHero := range superHeroes {
 		parsedSuperHero := ParseSuperHero(superHero)
@@ -53,3 +53,5 @@ func ParseResponse(superHeroes map[int]Superhero) []SuperHeroWithEncryptIdentity
 	return response
 
 }
+
+type SuperHerosData map[int]*Superhero

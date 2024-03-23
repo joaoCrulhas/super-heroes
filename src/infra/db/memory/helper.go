@@ -7,8 +7,8 @@ import (
 	"github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
 )
 
-func ReadSuperHeroFile(fileName string) (map[int]domain.Superhero, error) {
-	superHeroes := map[int]domain.Superhero{}
+func ReadSuperHeroFile(fileName string) (domain.SuperHerosData, error) {
+	superHeroes := make(domain.SuperHerosData)
 	var parsed []domain.Superhero
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -22,7 +22,7 @@ func ReadSuperHeroFile(fileName string) (map[int]domain.Superhero, error) {
 	}
 	for i := 0; i < len(parsed); i++ {
 		parsed[i].ID = i + 1
-		superHeroes[parsed[i].ID] = parsed[i]
+		superHeroes[parsed[i].ID] = &parsed[i]
 	}
 	return superHeroes, nil
 }

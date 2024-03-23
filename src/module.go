@@ -30,7 +30,7 @@ func (m *Module) Configure(injector *dingo.Injector) {
 	superHeroUseCases := usecases.NewSuperHeroUseCase(memoryDb, encrypter)
 	web.BindRoutes(injector, new(Routes))
 	injector.Bind(new(domain.Authentication[map[string][]string, bool])).To(usecases.NewAuthenticationAdmin())
-	injector.Bind(new(db.Repository[domain.Superhero])).ToInstance(memoryDb)
-	injector.Bind(new(domain.SuperHeroUseCase)).ToInstance(superHeroUseCases)
+	injector.Bind(new(db.Repository[domain.SuperHerosData, *domain.Superhero])).ToInstance(memoryDb)
 	injector.Bind(new(domain.Encrypter)).ToInstance(encrypter)
+	injector.Bind(new(domain.SuperHeroUseCase)).ToInstance(superHeroUseCases)
 }
