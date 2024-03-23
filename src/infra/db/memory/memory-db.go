@@ -8,7 +8,7 @@ import (
 )
 
 // If provided with a nil slice, it will read the file from the path provided
-func NewSuperHeroMemoryRepository(superHeroes []domain.Superhero) (*SuperHeroMemoryRepository, error) {
+func NewSuperHeroMemoryRepository(superHeroes domain.SuperHerosData) (*SuperHeroMemoryRepository, error) {
 	if len(superHeroes) == 0 {
 		var err error
 		superHeroes, err = ReadSuperHeroFile("superheroes.json")
@@ -22,21 +22,21 @@ func NewSuperHeroMemoryRepository(superHeroes []domain.Superhero) (*SuperHeroMem
 }
 
 type SuperHeroMemoryRepository struct {
-	superHeroes []domain.Superhero
+	superHeroes domain.SuperHerosData
 }
 
-func (r *SuperHeroMemoryRepository) Fetch(c context.Context) ([]domain.Superhero, error) {
+func (r *SuperHeroMemoryRepository) Fetch(c context.Context) (domain.SuperHerosData, error) {
 	return r.superHeroes, nil
 }
 
-func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[string][]string) ([]domain.Superhero, error) {
-	var heroes []domain.Superhero
+func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[string][]string) (domain.SuperHerosData, error) {
+	heroes := domain.SuperHerosData{}
 	for _, hero := range r.superHeroes {
 		for k, v := range filter {
 			if k == "superpowers" {
 				for _, s := range v {
 					if slices.Contains(hero.Superpowers, s) {
-						heroes = append(heroes, hero)
+						heroes[hero.ID] = hero
 					}
 				}
 			}
@@ -45,13 +45,7 @@ func (r *SuperHeroMemoryRepository) FindByFilter(c context.Context, filter map[s
 	return heroes, nil
 }
 
-func (r *SuperHeroMemoryRepository) Create(c context.Context, item domain.Superhero) (domain.Superhero, error) {
-	item.ID = uint64(len(r.superHeroes) + 1)
-	r.superHeroes = append(r.superHeroes, domain.Superhero{
-		ID:          item.ID,
-		Name:        item.Name,
-		Identity:    item.Identity,
-		Superpowers: item.Superpowers,
-	})
+func (r *SuperHeroMemoryRepository) Create(c context.Context, item *domain.Superhero) (*domain.Superhero, error) {
+	r.superHeroes[len(r.superHeroes)+1] = item
 	return item, nil
 }

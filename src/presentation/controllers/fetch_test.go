@@ -33,26 +33,27 @@ func (suite *FetchControllerTestSuite) SetupSuite() {
 
 // This TestSuite is responsible for testing the FetchSuperHeroController
 func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
-	expected := []shero_domain.Superhero{
-		{
-			Name: "superHero1",
-			Identity: shero_domain.Identity{
-				FirstName: "Snyder",
-				LastName:  "Johnston",
-			},
-			Birthday:    "1990-04-14",
-			Superpowers: []string{"flight", "strength", "invulnerability"},
+	expected := shero_domain.SuperHerosData{}
+
+	expected[1] = &shero_domain.Superhero{
+		Name: "superHero1",
+		Identity: shero_domain.Identity{
+			FirstName: "Snyder",
+			LastName:  "Johnston",
 		},
-		{
-			Name: "Super Hero 2",
-			Identity: shero_domain.Identity{
-				FirstName: "Snyder",
-				LastName:  "Johnston",
-			},
-			Birthday:    "1973-04-18", // Batman's first appearance in comics
-			Superpowers: []string{},
-		},
+		Birthday:    "1990-04-14",
+		Superpowers: []string{"flight", "strength", "invulnerability"},
 	}
+	expected[2] = &shero_domain.Superhero{
+		Name: "Super Hero 2",
+		Identity: shero_domain.Identity{
+			FirstName: "Snyder",
+			LastName:  "Johnston",
+		},
+		Birthday:    "1973-04-18", // Batman's first appearance in comics
+		Superpowers: []string{},
+	}
+
 	suite.mockedUseCase.EXPECT().Fetch(suite.ctx, mock.Anything).Return(expected, nil)
 	suite.mockedUseCase.EXPECT().EncryptIdentity(suite.ctx, mock.Anything).Return("mock", nil)
 	suite.mockAdminAuth.EXPECT().Auth(mock.Anything).Return(false, shero_domain.Unauthorized("unauthorized"))

@@ -44,79 +44,102 @@ func (suite *MemoryDbTestSuite) TearDownTest() {
 }
 
 func (suite *MemoryDbTestSuite) TestShouldReturnAllHeroes() {
-	fmt.Println("From TestExample")
-	expected := testutils.GetSuperHeroes()
 	got, _ := suite.sut.Fetch(suite.ctx)
-	suite.Equal(expected, got)
+	suite.Equal(testutils.GetSuperHeroes(), got)
 }
 
 func (suite *MemoryDbTestSuite) TestUsingFindByFilter() {
 	filter := map[string][]string{"superpowers": {"strength"}}
-	fmt.Println("From TestExample")
-	expected := testutils.GetSuperHeroes()[0:1]
+	expected := testutils.GetSuperHeroes()[1]
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
-	suite.Equal(expected, got)
+	suite.Equal(expected, got[1])
 }
 
 func (suite *MemoryDbTestSuite) TestShouldMatchTwoSuperPowers() {
 	filter := map[string][]string{"superpowers": {"strength", "healing"}}
-	fmt.Println("From TestExample")
-	expected := []domain.Superhero{
-		{
-			Name: "superHero1",
-			Identity: domain.Identity{
-				FirstName: "Snyder",
-				LastName:  "Johnston",
-			},
-			Birthday:    "1990-04-14",
-			Superpowers: []string{"flight", "strength", "invulnerability"},
+	exp := domain.SuperHerosData{}
+	exp[1] = &domain.Superhero{
+		ID:   1,
+		Name: "superHero1",
+		Identity: domain.Identity{
+			FirstName: "Snyder",
+			LastName:  "Johnston",
 		},
-		{
-			Name: "Super Hero 3",
-			Identity: domain.Identity{
-				FirstName: "Petra",
-				LastName:  "Sharpe",
-			},
-			Birthday:    "1998-04-18", // Batman's first appearance in comics
-			Superpowers: []string{"healing"},
+		Birthday:    "1990-04-14",
+		Superpowers: []string{"flight", "strength", "invulnerability"},
+	}
+	exp[3] = &domain.Superhero{
+		ID:   3,
+		Name: "superHero3",
+		Identity: domain.Identity{
+			FirstName: "Test3",
+			LastName:  "TestLastName3",
 		},
+		Birthday:    "1990-04-14", // Batman's first appearance in comics
+		Superpowers: []string{"healing"},
 	}
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
-	suite.Equal(expected, got)
+	suite.Equal(exp, got)
 }
 
 func (suite *MemoryDbTestSuite) TestShouldReturnASuperHeroIfMatches() {
 	filter := map[string][]string{"superpowers": {"strength", "healing"}}
-	fmt.Println("From TestExample")
-	expected := []domain.Superhero{
-		{
-			Name: "superHero1",
-			Identity: domain.Identity{
-				FirstName: "Snyder",
-				LastName:  "Johnston",
-			},
-			Birthday:    "1990-04-14",
-			Superpowers: []string{"flight", "strength", "invulnerability"},
-		},
-		{
-			Name: "Super Hero 3",
-			Identity: domain.Identity{
-				FirstName: "Petra",
-				LastName:  "Sharpe",
-			},
-			Birthday:    "1998-04-18", // Batman's first appearance in comics
-			Superpowers: []string{"healing"},
-		},
-	}
+
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
-	suite.Equal(expected, got)
+	suite.Equal(&domain.Superhero{
+		ID:   1,
+		Name: "superHero1",
+		Identity: domain.Identity{
+			FirstName: "Snyder",
+			LastName:  "Johnston",
+		},
+		Birthday:    "1990-04-14",
+		Superpowers: []string{"flight", "strength", "invulnerability"},
+	}, got[1])
+	suite.Equal(&domain.Superhero{
+		ID:          3,
+		Name:        "superHero3",
+		Birthday:    "1990-04-14",
+		Superpowers: []string{"healing"},
+		Identity: domain.Identity{
+			FirstName: "Test3",
+			LastName:  "TestLastName3",
+		},
+	}, got[3])
 }
 
 func (suite *MemoryDbTestSuite) TestShouldReturnAnEmptyArrayIfNoSuperHeroWithSuperPower() {
 	filter := map[string][]string{"superpowers": {"invisibility"}}
-	fmt.Println("From TestExample")
 	got, _ := suite.sut.FindByFilter(suite.ctx, filter)
-	suite.Equal([]domain.Superhero(nil), got)
+	suite.Equal(0, len(got))
+}
+
+func (suite *MemoryDbTestSuite) TestShouldNotReturnRepetitiveSuperHero() {
+	filter := map[string][]string{"superpowers": {"invisibility", "healing"}}
+	mockMap := domain.SuperHerosData{}
+	mockMap[1] = &domain.Superhero{
+		Name:        "superHero1",
+		ID:          1,
+		Birthday:    "1990-04-14",
+		Superpowers: []string{"healing", "invisibility"},
+		Identity: domain.Identity{
+			FirstName: "Test",
+			LastName:  "Two",
+		},
+	}
+	sut, _ := db.NewSuperHeroMemoryRepository(mockMap)
+	got, _ := sut.FindByFilter(suite.ctx, filter)
+	suite.Equal(&domain.Superhero{
+		ID:   1,
+		Name: "superHero1",
+		Identity: domain.Identity{
+			FirstName: "Test",
+			LastName:  "Two",
+		},
+		Birthday:    "1990-04-14",
+		Superpowers: []string{"healing", "invisibility"},
+	}, got[1])
+
 }
 
 func TestMemoryDbTestSuite(t *testing.T) {
