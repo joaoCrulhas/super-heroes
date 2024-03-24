@@ -44,11 +44,11 @@ func ParseSuperHero(superHero *Superhero) SuperHeroWithEncryptIdentity {
 		Superpowers: superHero.Superpowers,
 	}
 }
-func ParseResponse(superHeroes SuperHerosData) []SuperHeroWithEncryptIdentity {
-	var response []SuperHeroWithEncryptIdentity
+func ParseResponse(superHeroes SuperHerosData) []*SuperHeroWithEncryptIdentity {
+	var response []*SuperHeroWithEncryptIdentity
 	for _, superHero := range superHeroes {
 		parsedSuperHero := ParseSuperHero(superHero)
-		response = append(response, parsedSuperHero)
+		response = append(response, &parsedSuperHero)
 	}
 	return response
 

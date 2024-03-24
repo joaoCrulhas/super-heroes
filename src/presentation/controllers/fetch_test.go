@@ -59,14 +59,14 @@ func (suite *FetchControllerTestSuite) TestShouldReturnAllHeroes() {
 	suite.mockAdminAuth.EXPECT().Auth(mock.Anything).Return(false, shero_domain.Unauthorized("unauthorized"))
 	request := presentation.Request[any]{}
 	actual := suite.sut.Handle(suite.ctx, request)
-	suite.Assertions.Equal(shero_domain.SuperHeroWithEncryptIdentity{
+	suite.Assertions.Equal(&shero_domain.SuperHeroWithEncryptIdentity{
 		Name:        "superHero1",
 		Identity:    "mock",
 		Birthday:    "1990-04-14",
 		Superpowers: []string{"flight", "strength", "invulnerability"},
 	}, actual.Data[0])
 
-	suite.Assertions.Equal(shero_domain.SuperHeroWithEncryptIdentity{
+	suite.Assertions.Equal(&shero_domain.SuperHeroWithEncryptIdentity{
 		Name:        "Super Hero 2",
 		Identity:    "mock",
 		Birthday:    "1973-04-18", // Batman's first appearance in comics

@@ -3,6 +3,7 @@ package presentation
 import (
 	"context"
 	"net/http"
+	"sort"
 
 	"flamingo.me/flamingo/v3/framework/web"
 	"github.com/joaoCrulhas/omnevo-super-heroes/src/domain"
@@ -10,7 +11,7 @@ import (
 	presentation_adapter "github.com/joaoCrulhas/omnevo-super-heroes/src/presentation/controllers/adapter"
 )
 
-type SuperHeroResponse []domain.SuperHeroWithEncryptIdentity
+type SuperHeroResponse []*domain.SuperHeroWithEncryptIdentity
 type FetchSuperHeroController struct {
 	superHerUseCase domain.SuperHeroUseCase
 	responder       *web.Responder
@@ -45,8 +46,8 @@ func (controller *FetchSuperHeroController) Wrapper(ctx context.Context, r *web.
 	return controller.responder.Data(response).Status(response.StatusCode)
 }
 
-func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request presentation.Request[any], data domain.SuperHerosData) ([]domain.SuperHeroWithEncryptIdentity, error) {
-	var superHeroesParsed []domain.SuperHeroWithEncryptIdentity
+func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request presentation.Request[any], data domain.SuperHerosData) ([]*domain.SuperHeroWithEncryptIdentity, error) {
+	var superHeroesParsed []*domain.SuperHeroWithEncryptIdentity
 	auth, err := controller.adminAuth.Auth(request.Headers)
 	if err != nil || !auth {
 		for i := range data {
@@ -54,7 +55,7 @@ func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request
 			if err != nil {
 				return nil, err
 			}
-			superHeroesParsed = append(superHeroesParsed, domain.SuperHeroWithEncryptIdentity{
+			superHeroesParsed = append(superHeroesParsed, &domain.SuperHeroWithEncryptIdentity{
 				ID:          data[i].ID,
 				Name:        data[i].Name,
 				Identity:    identity,
@@ -64,8 +65,7 @@ func (controller *FetchSuperHeroController) isAdmin(ctx context.Context, request
 		}
 		return superHeroesParsed, nil
 	}
-	superHeroesParsed = domain.ParseResponse(data)
-	return superHeroesParsed, nil
+	return domain.ParseResponse(data), nil
 }
 
 func (controller *FetchSuperHeroController) Handle(ctx context.Context, request presentation.Request[any]) presentation.Response[SuperHeroResponse] {
@@ -81,5 +81,8 @@ func (controller *FetchSuperHeroController) Handle(ctx context.Context, request 
 	if err != nil {
 		return presentation.CreateResponse[SuperHeroResponse](http.StatusOK, nil, err)
 	}
+	sort.Slice(superHeroesParsed, func(i, j int) bool {
+		return superHeroesParsed[i].ID < superHeroesParsed[j].ID
+	})
 	return presentation.CreateResponse[SuperHeroResponse](http.StatusOK, superHeroesParsed, nil)
 }
